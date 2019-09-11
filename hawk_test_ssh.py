@@ -95,7 +95,7 @@ class hawkTestSSH:
         self.set_test_status(results, 'verify_primitive', 'failed')
         return False
 
-    def verify_primitive_removed(self, results):
+    def verify_primitive_removed(self, myprimitive, results):
         if self.check_cluster_conf_ssh("crm resource list | grep ocf::heartbeat:anything", ''):
             print("INFO: primitive successfully removed")
             self.set_test_status(results, 'verify_primitive_removed', 'passed')

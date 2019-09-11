@@ -72,7 +72,7 @@ if args.secret:
     ssh.verify_primitive(myprimitive, args.test_version.lower(), results)
 browser.test('test_remove_primitive', results, myprimitive)
 if args.secret:
-    ssh.verify_primitive_removed(results)
+    ssh.verify_primitive_removed(myprimitive, results)
 browser.test('test_add_clone', results, myclone)
 browser.test('test_remove_clone', results, myclone)
 browser.test('test_add_group', results, mygroup)
