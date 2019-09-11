@@ -21,19 +21,19 @@ PRIMITIVE_TARGET_ROLE_ERR = ". Couldn't find value [Started] for primitive targe
 XPATH_ERR_FMT = "check_and_click_by_xpath requires a list of xpath strings. Got [%s]"
 
 # XPATH constants
-CLICK_OK_SUBMIT = "//*[@id=\"modal\"]/div/div/form/div[3]/input"
+CLICK_OK_SUBMIT = '//*[@id="modal"]/div/div/form/div[3]/input'
 CONFIG_EDIT = '//a[contains(@href, "config/edit")]'
 RESOURCES_TYPES = '//a[contains(@href, "resources/types")]'
 HREF_DASHBOARD = '//a[contains(@href, "/dashboard")]'
 HREF_REPORTS = '//a[contains(@href, "/reports")]'
 OCF_OPT_LIST = '//option[contains(@value, "ocf")]'
 ANYTHING_OPT_LIST = '//option[contains(@value, "anything")]'
-EDIT_START_TIMEOUT = "//*[@id=\"oplist\"]/fieldset/div/div[1]/div[1]/div[2]/div/div/a[1]"
-EDIT_STOP_TIMEOUT = "//*[@id=\"oplist\"]/fieldset/div/div[1]/div[2]/div[2]/div/div/a[1]"
-MODAL_TIMEOUT = "//*[@id=\"modal\"]/div/div/form/div[2]/fieldset/div/div[1]/div/div"
-MODAL_STOP = "//*[@id=\"modal\"]/div/div/form/div[2]/fieldset/div/div[2]/div/div/select/option[6]"
-EDIT_MONITOR_TIMEOUT = "//*[@id=\"oplist\"]/fieldset/div/div[1]/div[3]/div[2]/div/div/a[1]"
-MODAL_MONITOR_TIMEOUT = "//*[@id=\"modal\"]/div/div/form/div[2]/fieldset/div/div[1]/div"
+EDIT_START_TIMEOUT = '//*[@id="oplist"]/fieldset/div/div[1]/div[1]/div[2]/div/div/a[1]'
+EDIT_STOP_TIMEOUT = '//*[@id="oplist"]/fieldset/div/div[1]/div[2]/div[2]/div/div/a[1]'
+MODAL_TIMEOUT = '//*[@id="modal"]/div/div/form/div[2]/fieldset/div/div[1]/div/div'
+MODAL_STOP = '//*[@id="modal"]/div/div/form/div[2]/fieldset/div/div[2]/div/div/select/option[6]'
+EDIT_MONITOR_TIMEOUT = '//*[@id="oplist"]/fieldset/div/div[1]/div[3]/div[2]/div/div/a[1]'
+MODAL_MONITOR_TIMEOUT = '//*[@id="modal"]/div/div/form/div[2]/fieldset/div/div[1]/div'
 TARGET_ROLE_STARTED = '//option[contains(@value, "tarted")]'
 HREF_DELETE_FORMAT = '//a[contains(@href, "%s") and contains(@title, "Delete")]'
 COMMIT_BTN_DANGER = '//button[contains(@class, "btn-danger") and contains(@class, "commit")]'
@@ -47,15 +47,15 @@ HREF_NODES = '//a[contains(@href, "#nodes")]'
 HREF_TAGS = '//a[contains(@href, "#tags")]'
 HREF_ALERTS = '//a[contains(@href, "#alerts")]'
 HREF_FENCING = '//a[contains(@href, "#fencing")]'
-RSC_ROWS = "//*[@id=\"resources\"]/div[1]/div[2]/div[2]/table/tbody/tr"
-DROP_DOWN_FORMAT = "//*[@id=\"resources\"]/div[1]/div[2]/div[2]/table/tbody/tr[%d]/td[6]/div/div"
+RSC_ROWS = '//*[@id="resources"]/div[1]/div[2]/div[2]/table/tbody/tr'
+DROP_DOWN_FORMAT = '//*[@id="resources"]/div[1]/div[2]/div[2]/table/tbody/tr[%d]/td[6]/div/div'
 STONITH_MAINT_ON = '//a[contains(@href, "stonith-sbd/maintenance_on")]'
-NODE_DETAILS = "//*[@id=\"nodes\"]/div[1]/div[2]/div[2]/table/tbody/tr[1]/td[5]/div/a[2]"
-DISMISS_MODAL = "//*[@id=\"modal\"]/div/div/div[3]/button"
-CLEAR_STATE = "//*[@id=\"nodes\"]/div[1]/div[2]/div[2]/table/tbody/tr[1]/td[5]/div/div/button"
+NODE_DETAILS = '//*[@id="nodes"]/div[1]/div[2]/div[2]/table/tbody/tr[1]/td[5]/div/a[2]'
+DISMISS_MODAL = '//*[@id="modal"]/div/div/div[3]/button'
+CLEAR_STATE = '//*[@id="nodes"]/div[1]/div[2]/div[2]/table/tbody/tr[1]/td[5]/div/div/button'
 NODE_MAINT = '//a[contains(@href, "maintenance") and contains(@title, "Switch to maintenance")]'
 NODE_READY = '//a[contains(@href, "ready") and contains(@title, "Switch to ready")]'
-GENERATE_REPORT = "//*[@id=\"generate\"]/form/div/div[2]/button"
+GENERATE_REPORT = '//*[@id="generate"]/form/div/div[2]/button'
 CLONE_CHILD = ('//select[contains(@data-help-filter, ".row.resource") and '
                'contains(@name, "clone[child]")]')
 TARGET_ROLE_FORMAT = ('//select[contains(@class, "form-control") and '
