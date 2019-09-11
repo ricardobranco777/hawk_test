@@ -2,7 +2,9 @@
 """Define SSH related functions to test the HAWK GUI"""
 
 from distutils.version import LooseVersion as Version
-import paramiko, hawk_test_results, warnings
+import warnings
+import paramiko
+
 # Ignore CryptographyDeprecationWarning shown when using paramiko
 try:
     from cryptography.utils import CryptographyDeprecationWarning
@@ -10,56 +12,39 @@ try:
 except ImportError:
     pass
 
-class hawkTestSSHError(Exception):
-    """Base class for exceptions in this module."""
-    def __init__(self, value):
-        self.value = value
 
-    def __str__(self):
-        return repr(self.value)
-
-class hawkTestSSH:
+class HawkTestSSH:
     def __init__(self, hostname, secret):
         self.ssh = paramiko.SSHClient()
         self.ssh.load_system_host_keys()
         self.ssh.set_missing_host_key_policy(paramiko.WarningPolicy)
         self.ssh.connect(hostname=hostname.lower(), username="root", password=secret)
 
-    def is_ssh(self):
-        clase = str(type(self.ssh)).split(' ')[1][1:26]
-        if clase != 'paramiko.client.SSHClient':
-            raise hawkTestSSHError('SSH object must be of type %s. Got: [%s]' %
-                                   ('paramiko.client.SSHClient', type(clase)))
-        return True
-
     def check_cluster_conf_ssh(self, command, mustmatch):
         command = str(command)
-        if self.is_ssh():
-            resp = self.ssh.exec_command(command)
-            out = resp[1].read().decode().rstrip('\n')
-            err = resp[2].read().decode().rstrip('\n')
-            print("INFO: ssh command [%s] got output [%s] and error [%s]" % (command, out, err))
-            if err:
-                print("ERROR: got an error over SSH: [%s]" % err)
+        resp = self.ssh.exec_command(command)
+        out = resp[1].read().decode().rstrip('\n')
+        err = resp[2].read().decode().rstrip('\n')
+        print("INFO: ssh command [%s] got output [%s] and error [%s]" % (command, out, err))
+        if err:
+            print("ERROR: got an error over SSH: [%s]" % err)
+            return False
+        if isinstance(mustmatch, str):
+            if mustmatch:
+                if mustmatch in out:
+                    return True
                 return False
-            if isinstance(mustmatch, str):
-                if mustmatch:
-                    if mustmatch in out:
-                        return True
+            return out == mustmatch
+        if isinstance(mustmatch, list):
+            for exp in mustmatch:
+                if str(exp) not in out:
                     return False
-                return out == mustmatch
-            elif isinstance(mustmatch, list):
-                for exp in mustmatch:
-                    if str(exp) not in out:
-                        return False
-                return True
-            else:
-                raise hawkTestSSHError("check_cluster_conf_ssh: mustmatch must be str or list")
-        return False
+            return True
+        raise ValueError("check_cluster_conf_ssh: mustmatch must be str or list")
 
-    def set_test_status(self, results, test, status):
-        if isinstance(results, hawk_test_results.resultSet):
-            results.set_test_status(test, status)
+    @staticmethod
+    def set_test_status(results, test, status):
+        results.set_test_status(test, status)
 
     def verify_stonith_in_maintenance(self, results):
         if self.check_cluster_conf_ssh("crm status | grep stonith-sbd", "unmanaged"):

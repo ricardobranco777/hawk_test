@@ -1,42 +1,39 @@
 #!/usr/bin/python3
 """Define classes and functions to handle results in HAWK GUI test"""
 
-import time, json, hawk_test_driver, hawk_test_ssh
+import time
+import json
 
-class resultSetError(Exception):
-    """Base class for exceptions in this module."""
-    def __init__(self, value):
-        self.value = value
+import hawk_test_driver
+import hawk_test_ssh
 
-    def __str__(self):
-        return repr(self.value)
 
-class resultSet:
+class ResultSet:
     def __init__(self):
         self.my_tests = []
         self.start_time = time.time()
-        for f in dir(hawk_test_driver.hawkTestDriver):
-            if f.startswith('test_') and callable(getattr(hawk_test_driver.hawkTestDriver, f)):
-                self.my_tests.append(f)
+        for func in dir(hawk_test_driver.HawkTestDriver):
+            if func.startswith('test_') and callable(getattr(hawk_test_driver.HawkTestDriver, func)):
+                self.my_tests.append(func)
         self.results_set = {'tests': [], 'info': {}, 'summary': {}}
         for test in self.my_tests:
             auxd = {'name': test, 'test_index': 0, 'outcome': 'failed'}
             self.results_set['tests'].append(auxd)
         self.results_set['info']['timestamp'] = time.time()
-        with open('/etc/os-release', 'r') as fh:
-            osrel = fh.read()
-        osrel = osrel[osrel.find('\nPRETTY_NAME=')+14:len(osrel)]
-        self.results_set['info']['distro'] = str(osrel[0:osrel.find('\n')-1])
+        with open('/etc/os-release', 'r') as file:
+            osrel = file.read()
+        osrel = osrel[osrel.find('\nPRETTY_NAME=') + 14:len(osrel)]
+        self.results_set['info']['distro'] = str(osrel[0:osrel.find('\n') - 1])
         self.results_set['info']['results_file'] = 'hawk_test.results'
         self.results_set['summary']['duration'] = 0
         self.results_set['summary']['passed'] = 0
         self.results_set['summary']['num_tests'] = len(self.my_tests)
 
     def add_ssh_tests(self):
-        for f in dir(hawk_test_ssh.hawkTestSSH):
-            if f.startswith('verify_') and callable(getattr(hawk_test_ssh.hawkTestSSH, f)):
-                self.my_tests.append(f)
-                auxd = {'name': str(f), 'test_index': 0, 'outcome': 'failed'}
+        for func in dir(hawk_test_ssh.HawkTestSSH):
+            if func.startswith('verify_') and callable(getattr(hawk_test_ssh.HawkTestSSH, func)):
+                self.my_tests.append(func)
+                auxd = {'name': str(func), 'test_index': 0, 'outcome': 'failed'}
                 self.results_set['tests'].append(auxd)
         self.results_set['summary']['num_tests'] = len(self.my_tests)
 
@@ -48,15 +45,15 @@ class resultSet:
         status = str(status)
         testname = str(testname)
         if status not in ['passed', 'failed', 'skipped']:
-            raise resultSetError('test status must be either [passed] or [failed]')
-        if (status == 'passed' and
-                self.results_set['tests'][self.my_tests.index(testname)]['outcome'] != 'passed'):
+            raise ValueError('test status must be either [passed] or [failed]')
+        if status == 'passed' and \
+                self.results_set['tests'][self.my_tests.index(testname)]['outcome'] != 'passed':
             self.results_set['summary']['passed'] += 1
-        elif (status == 'failed' and
-              self.results_set['tests'][self.my_tests.index(testname)]['outcome'] != 'failed'):
+        elif status == 'failed' and \
+                self.results_set['tests'][self.my_tests.index(testname)]['outcome'] != 'failed':
             self.results_set['summary']['passed'] -= 1
-        elif (status == 'skipped' and
-              self.results_set['tests'][self.my_tests.index(testname)]['outcome'] != 'skipped'):
+        elif status == 'skipped' and \
+                self.results_set['tests'][self.my_tests.index(testname)]['outcome'] != 'skipped':
             self.results_set['summary']['num_tests'] -= 1
         self.results_set['tests'][self.my_tests.index(testname)]['outcome'] = status
         self.results_set['summary']['duration'] = time.time() - self.start_time

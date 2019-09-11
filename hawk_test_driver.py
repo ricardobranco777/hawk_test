@@ -1,6 +1,10 @@
 #!/usr/bin/python3
 """Define Selenium driver related functions and classes to test the HAWK GUI"""
 
+import ipaddress
+import time
+from distutils.version import LooseVersion as Version
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -8,12 +12,8 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from distutils.version import LooseVersion as Version
-import ipaddress, time
 
-import hawk_test_results
-
-### Error messages
+# Error messages
 STONITH_ERR = ". Couldn't find stonith-sbd menu to place it in maintenance mode"
 STONITH_ERR_OFF = ". Could not find Disable Maintenance Mode button for stonith-sbd"
 MAINT_TOGGLE_ERR = ". Could not find Switch to Maintenance toggle button for node"
@@ -66,15 +66,8 @@ WIZARDS_BASIC = '/html/body/div[2]/div[2]/div/div/div[1]/div[2]/div[2]/ul/li[1]/
 TRASHBIN_BUTTON_VIP = '/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/div/div[2]/div/div[1]/div[1]/div[2]/div[2]/table/tbody/tr[2]/td[4]/div/a[3]/i'
 TRASHBIN_BUTTOP_VIP_OK = '/html/body/div[5]/div/div/form/div[3]/button[2]'
 
-class hawkTestDriverError(Exception):
-    """Base class for exceptions in this module."""
-    def __init__(self, value):
-        self.value = value
 
-    def __str__(self):
-        return repr(self.value)
-
-class hawkTestDriver:
+class HawkTestDriver:
     def __init__(self, addr='localhost', port='7630', browser='firefox', version='12-SP2'):
         self.set_addr(addr)
         self.set_port(port)
@@ -88,14 +81,14 @@ class hawkTestDriver:
         if isinstance(addr, str):
             self.addr = addr
         else:
-            raise hawkTestDriverError('Unexpected type for host address')
+            raise ValueError('Unexpected type for host address')
 
     def set_port(self, port):
         port = str(port)
         if port.isdigit() and 1 <= int(port) <= 65535:
             self.port = port
         else:
-            raise hawkTestDriverError('Port must be an integer')
+            raise ValueError('Port must be an integer')
 
     def set_browser(self, browser):
         browser = browser.lower()
@@ -106,7 +99,7 @@ class hawkTestDriver:
             else:
                 self.timeout_scale = 1
         else:
-            raise hawkTestDriverError('Browser must be chrome, chromium or firefox')
+            raise ValueError('Browser must be chrome, chromium or firefox')
 
     def _connect(self):
         if self.browser in ['chrome', 'chromium']:
@@ -117,7 +110,7 @@ class hawkTestDriver:
             profile.assume_untrusted_cert_issuer = True
             self.driver = webdriver.Firefox(firefox_profile=profile)
         else:
-            raise hawkTestDriverError('Browser must be chrome, chromium or firefox')
+            raise ValueError('Browser must be chrome, chromium or firefox')
         self.driver.maximize_window()
         return self.driver
 
@@ -126,11 +119,9 @@ class hawkTestDriver:
         self.driver.quit()
         self.driver = ''
 
-    def set_test_status(self, results, testname, status):
-        if isinstance(results, hawk_test_results.resultSet):
-            results.set_test_status(testname, status)
-        else:
-            raise hawkTestDriverError('results must be of type hawk_test_results.resultSet')
+    @staticmethod
+    def set_test_status(results, testname, status):
+        results.set_test_status(testname, status)
 
     # Some links by text are capitalized differently between the chrome and firefox drivers.
     def link_by_browser(self, linktext):
@@ -179,7 +170,7 @@ class hawkTestDriver:
             elem.click()
         except ElementNotInteractableException:
             # Element is obscured. Wait and click again
-            time.sleep(2*self.timeout_scale)
+            time.sleep(2 * self.timeout_scale)
             elem.click()
         time.sleep(self.timeout_scale)
         return True
@@ -228,20 +219,20 @@ class hawkTestDriver:
     def check_and_click_by_xpath(self, errmsg, xpath_exps):
         if not isinstance(xpath_exps, list):
             self.test_status = False
-            raise hawkTestDriverError(XPATH_ERR_FMT % type(xpath_exps))
-        for e in xpath_exps:
-            elem = self.find_element(By.XPATH, str(e))
+            raise ValueError(XPATH_ERR_FMT % type(xpath_exps))
+        for exp in xpath_exps:
+            elem = self.find_element(By.XPATH, str(exp))
             if not elem:
-                print("ERROR: Couldn't find element by xpath [%s] %s" % (e, errmsg))
+                print("ERROR: Couldn't find element by xpath [%s] %s" % (exp, errmsg))
                 self.test_status = False
                 return
             try:
                 elem.click()
             except ElementNotInteractableException:
                 # Element is obscured. Wait and click again
-                time.sleep(2*self.timeout_scale)
+                time.sleep(2 * self.timeout_scale)
                 elem.click()
-            time.sleep(2*self.timeout_scale)
+            time.sleep(2 * self.timeout_scale)
 
     # Test skip function
     def skip(self, testname, results):
@@ -307,7 +298,7 @@ class hawkTestDriver:
                                       [COMMIT_BTN_DANGER])
         if self.verify_success():
             print("INFO: cleared state of first node successfully")
-            time.sleep(2*self.timeout_scale)
+            time.sleep(2 * self.timeout_scale)
             return True
         print("ERROR: failed to clear state of the first node")
         return False
@@ -364,7 +355,7 @@ class hawkTestDriver:
                 elem.click()
                 return True
             except WebDriverException:
-                time.sleep(1+self.timeout_scale)
+                time.sleep(1 + self.timeout_scale)
         return False
 
     def test_remove_cluster(self, cluster_name):
@@ -376,13 +367,13 @@ class hawkTestDriver:
             print("ERROR: Couldn't find cluster [%s]. Cannot remove" % cluster_name)
             return False
         elem.click()
-        time.sleep(2*self.timeout_scale)
+        time.sleep(2 * self.timeout_scale)
         elem = self.find_element(By.CLASS_NAME, 'close')
         if not elem:
             print("ERROR: Cannot find cluster remove button")
             return False
         elem.click()
-        time.sleep(2*self.timeout_scale)
+        time.sleep(2 * self.timeout_scale)
         elem = self.find_element(By.CLASS_NAME, 'cancel')
         if not elem:
             print("ERROR: No cancel button while removing cluster [%s]" % cluster_name)
@@ -391,7 +382,7 @@ class hawkTestDriver:
         time.sleep(self.timeout_scale)
         elem = self.find_element(By.CLASS_NAME, 'close')
         elem.click()
-        time.sleep(2*self.timeout_scale)
+        time.sleep(2 * self.timeout_scale)
         elem = self.find_element(By.CLASS_NAME, 'btn-danger')
         if not elem:
             print("ERROR: No OK button found while removing cluster [%s]" % cluster_name)
@@ -440,7 +431,6 @@ class hawkTestDriver:
         return self.click_on('Status')
 
     def test_add_primitive(self, priminame):
-        priminame = str(priminame)
         print("TEST: test_add_primitive: Add Resources: Primitive %s" % priminame)
         self.click_if_major_version("15", self.link_by_browser('configuration'))
         self.click_on('Resource')
@@ -452,7 +442,7 @@ class hawkTestDriver:
             print("ERROR: Couldn't find element [primitive[id]]. Cannot add primitive [%s]." %
                   priminame)
             return False
-        elem.send_keys(str(priminame))
+        elem.send_keys(priminame)
         elem = self.find_element(By.NAME, 'primitive[clazz]')
         if not elem:
             print("ERROR: Couldn't find element [primitive[clazz]]. Cannot add primitive [%s]" %
@@ -495,7 +485,7 @@ class hawkTestDriver:
         self.submit_operation_params(". Couldn't Apply changes for monitor operation")
         elem = self.find_element(By.NAME, 'primitive[meta][target-role]')
         if not elem:
-            print("ERROR: Couldn't find element [primitive[meta][target-role]]. " +
+            print("ERROR: Couldn't find element [primitive[meta][target-role]]. "
                   "Cannot add primitive [%s]." % priminame)
             return False
         elem.click()
@@ -505,12 +495,12 @@ class hawkTestDriver:
             print("ERROR: Couldn't find submit button for primitive [%s] creation." % priminame)
         else:
             elem.click()
-        if self.verify_success():
-            print("INFO: Successfully added primitive [%s] of class [ocf:heartbeat:anything]" %
-                  priminame)
-            return True
-        print("ERROR: Could not create primitive [%s]" % priminame)
-        return False
+        status = self.verify_success()
+        if status:
+            print("INFO: Successfully added primitive [%s] of class [ocf:heartbeat:anything]" % priminame)
+        else:
+            print("ERROR: Could not create primitive [%s]" % priminame)
+        return status
 
     def remove_rsc(self, name):
         name = str(name)
