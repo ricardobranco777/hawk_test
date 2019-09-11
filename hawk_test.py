@@ -11,6 +11,8 @@ parser.add_argument('-b', '--browser', type=str, required=True,
                     help='Browser to use in the test. Can be: firefox, chrome, chromium')
 parser.add_argument('-H', '--host', type=str, default='localhost',
                     help='Host or IP address where HAWK is running')
+parser.add_argument('-I', '--virtual-ip', type=str, default='',
+                    help='Virtual IP address/netmask')
 parser.add_argument('-P', '--port', type=str, default='7630',
                     help='TCP port where HAWK is running')
 parser.add_argument('-p', '--prefix', type=str, default='',
@@ -76,8 +78,9 @@ browser.test('test_remove_clone', results, myclone)
 browser.test('test_add_group', results, mygroup)
 browser.test('test_remove_group', results, mygroup)
 browser.test('test_click_around_edit_conf', results)
-browser.test('test_add_virtual_ip', results)
-browser.test('test_remove_virtual_ip', results)
+if args.virtual_ip:
+    browser.test('test_add_virtual_ip', results, args.virtual_ip)
+    browser.test('test_remove_virtual_ip', results, args.virtual_ip)
 
 # Save results if run with -r or --results
 if args.results:

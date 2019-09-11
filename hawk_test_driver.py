@@ -589,7 +589,7 @@ class hawkTestDriver:
                                        HREF_ALERTS, HREF_FENCING])
         return self.test_status
 
-    def test_add_virtual_ip(self, virtual_ip="10.0.2.222/24"):
+    def test_add_virtual_ip(self, virtual_ip):
         print("TEST: test_add_virtual_ip: Add virtual IP from the Wizard")
         broadcast = str(ipaddress.IPv4Network(virtual_ip, False).broadcast_address)
         virtual_ip, netmask = virtual_ip.split('/')
