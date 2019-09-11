@@ -29,7 +29,7 @@ class hawkTestSSH:
         clase = str(type(self.ssh)).split(' ')[1][1:26]
         if clase != 'paramiko.client.SSHClient':
             raise hawkTestSSHError('SSH object must be of type %s. Got: [%s]' %
-                                   ('paramiko.client.SSHClient', type(s)))
+                                   ('paramiko.client.SSHClient', type(clase)))
         return True
 
     def check_cluster_conf_ssh(self, command, mustmatch):
