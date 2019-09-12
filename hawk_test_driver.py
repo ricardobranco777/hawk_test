@@ -139,7 +139,6 @@ class HawkTestDriver:
                 self.driver.quit()
                 self.driver = ''
                 return False
-            elem.clear()
             elem.send_keys("hacluster")
             elem = self.find_element(By.NAME, "session[password]")
             if not elem:
@@ -463,7 +462,6 @@ class HawkTestDriver:
         if not elem:
             print("ERROR: Couldn't find element [primitive[params][binfile]]")
             return False
-        elem.clear()
         elem.send_keys("file")
         # Set start timeout value in 35s
         self.check_and_click_by_xpath(". Couldn't find edit button for start operation",
