@@ -9,6 +9,8 @@ RUN     apk --no-cache --virtual .build-deps add \
                 make \
                 openssl-dev && \
 	apk add --no-cache \
+		chromium \
+		chromium-chromedriver \
 		firefox-esr \
 		tzdata \
 		xdpyinfo \

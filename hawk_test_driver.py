@@ -104,7 +104,12 @@ class HawkTestDriver:
 
     def _connect(self):
         if self.browser in ['chrome', 'chromium']:
-            self.driver = webdriver.Chrome()
+            options = webdriver.ChromeOptions()
+            options.add_argument('--no-sandbox')
+            options.add_argument('--disable-gpu')
+            options.add_argument('--headless')
+            options.add_argument('--disable-dev-shm-usage')
+            self.driver = webdriver.Chrome(chrome_options=options)
         elif self.browser == 'firefox':
             profile = webdriver.FirefoxProfile()
             profile.accept_untrusted_certs = True
