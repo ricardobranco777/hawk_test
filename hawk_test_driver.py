@@ -105,10 +105,12 @@ class HawkTestDriver:
         if self.browser in ['chrome', 'chromium']:
             self.driver = webdriver.Chrome()
         elif self.browser == 'firefox':
+            options = webdriver.FirefoxOptions()
+            options.add_argument('-headless')
             profile = webdriver.FirefoxProfile()
             profile.accept_untrusted_certs = True
             profile.assume_untrusted_cert_issuer = True
-            self.driver = webdriver.Firefox(firefox_profile=profile)
+            self.driver = webdriver.Firefox(firefox_profile=profile, firefox_options=options)
         else:
             raise ValueError('Browser must be chrome, chromium or firefox')
         self.driver.maximize_window()

@@ -14,6 +14,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description='HAWK GUI interface Selenium test')
     parser.add_argument('-b', '--browser', type=str, required=True,
                         help='Browser to use in the test. Can be: firefox, chrome, chromium')
+    parser.add_argument('--headless', action='store_true',
+                        help="Use headless mode")
     parser.add_argument('-H', '--host', type=str, default='localhost',
                         help='Host or IP address where HAWK is running')
     parser.add_argument('-I', '--virtual-ip', type=str, default='',
