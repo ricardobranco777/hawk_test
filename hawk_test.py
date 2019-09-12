@@ -92,11 +92,11 @@ def main():
     if args.results:
         results.logresults(args.results)
 
-    quit(results.get_failed_tests_total())
+    return results.get_failed_tests_total()
 
 
 if __name__ == "__main__":
     try:
-        main()
+        sys.exit(main())
     except KeyboardInterrupt:
         sys.exit(1)
