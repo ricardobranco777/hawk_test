@@ -86,7 +86,7 @@ def main():
     browser.test('test_click_around_edit_conf', results)
     if args.virtual_ip:
         browser.test('test_add_virtual_ip', results, args.virtual_ip)
-        browser.test('test_remove_virtual_ip', results, args.virtual_ip)
+        browser.test('test_remove_virtual_ip', results)
 
     # Save results if run with -r or --results
     if args.results:
