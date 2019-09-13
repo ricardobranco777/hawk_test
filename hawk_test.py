@@ -12,23 +12,23 @@ import hawk_test_results
 
 def parse_args():
     parser = argparse.ArgumentParser(description='HAWK GUI interface Selenium test')
-    parser.add_argument('-b', '--browser', type=str, required=True,
-                        help='Browser to use in the test. Can be: firefox, chrome, chromium')
+    parser.add_argument('-b', '--browser', required=True, choices=['firefox', 'chrome', 'chromium'],
+                        help='Browser to use in the test')
     parser.add_argument('--headless', action='store_true',
                         help="Use headless mode")
-    parser.add_argument('-H', '--host', type=str, default='localhost',
+    parser.add_argument('-H', '--host', default='localhost',
                         help='Host or IP address where HAWK is running')
-    parser.add_argument('-I', '--virtual-ip', type=str, default='',
+    parser.add_argument('-I', '--virtual-ip',
                         help='Virtual IP address/netmask')
-    parser.add_argument('-P', '--port', type=str, default='7630',
+    parser.add_argument('-P', '--port', default='7630',
                         help='TCP port where HAWK is running')
-    parser.add_argument('-p', '--prefix', type=str, default='',
+    parser.add_argument('-p', '--prefix',
                         help='Prefix to add to Resources created during the test')
-    parser.add_argument('-t', '--test-version', type=str, default='', required=True,
+    parser.add_argument('-t', '--test-version', required=True,
                         help='Test version. Ex: 12-SP3, 12-SP4, 15, 15-SP1')
-    parser.add_argument('-s', '--secret', type=str, default='',
+    parser.add_argument('-s', '--secret',
                         help='root SSH Password of the HAWK node')
-    parser.add_argument('-r', '--results', type=str, default='',
+    parser.add_argument('-r', '--results',
                         help='Generate hawk_test.results file')
     return parser.parse_args()
 
