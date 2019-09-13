@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# Copyright (C) 2019 SUSE LLC
 """Define Selenium driver related functions and classes to test the HAWK GUI"""
 
 import ipaddress

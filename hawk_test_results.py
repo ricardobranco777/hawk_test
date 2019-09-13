@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# Copyright (C) 2019 SUSE LLC
 """Define classes and functions to handle results in HAWK GUI test"""
 
 import time
