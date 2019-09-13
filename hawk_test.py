@@ -2,12 +2,36 @@
 """HAWK GUI interface Selenium test: tests hawk GUI with Selenium using firefox or chrome"""
 
 import argparse
+import ipaddress
 import re
+import socket
 import sys
 
 import hawk_test_driver
 import hawk_test_ssh
 import hawk_test_results
+
+
+def hostname(string):
+    try:
+        socket.getaddrinfo(string, 1)
+        return string
+    except socket.gaierror:
+        raise argparse.ArgumentTypeError("unknown host: %s" % string)
+
+
+def cidr_address(string):
+    try:
+        ipaddress.ip_network(string, False)
+        return string
+    except ValueError:
+        raise argparse.ArgumentTypeError("Invalid CIDR address: %s" % string)
+
+
+def check_port(port):
+    if port.isdigit() and 1 <= int(port) <= 65535:
+        return port
+    raise argparse.ArgumentTypeError("%s is an invalid port number" % port)
 
 
 def parse_args():
@@ -16,11 +40,11 @@ def parse_args():
                         help='Browser to use in the test')
     parser.add_argument('--headless', action='store_true',
                         help="Use headless mode")
-    parser.add_argument('-H', '--host', default='localhost',
+    parser.add_argument('-H', '--host', default='localhost', type=hostname,
                         help='Host or IP address where HAWK is running')
-    parser.add_argument('-I', '--virtual-ip',
-                        help='Virtual IP address/netmask')
-    parser.add_argument('-P', '--port', default='7630',
+    parser.add_argument('-I', '--virtual-ip', type=cidr_address,
+                        help='Virtual IP address in CIDR notation')
+    parser.add_argument('-P', '--port', default='7630', type=check_port,
                         help='TCP port where HAWK is running')
     parser.add_argument('-p', '--prefix',
                         help='Prefix to add to Resources created during the test')
@@ -30,7 +54,8 @@ def parse_args():
                         help='root SSH Password of the HAWK node')
     parser.add_argument('-r', '--results',
                         help='Generate hawk_test.results file')
-    return parser.parse_args()
+    args = parser.parse_args()
+    return args
 
 
 def main():
