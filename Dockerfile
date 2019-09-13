@@ -10,9 +10,9 @@ RUN     apk --no-cache --virtual .build-deps add \
                 openssl-dev && \
 	apk add --no-cache \
 		firefox-esr \
-		hicolor-icon-theme \
-		ttf-dejavu \
-		tzdata && \
+		tzdata \
+		xdpyinfo \
+		xvfb && \
         pip install --no-cache-dir -r /tmp/requirements.txt && \
         ln -s /usr/local/bin/python3 /usr/bin/python3 && \
         apk del .build-deps
@@ -27,6 +27,7 @@ RUN	chmod +x /home/test/hawk_test.py
 
 ENV     PYTHONPATH .
 ENV	PYTHONUNBUFFERED 1
+ENV	DBUS_SESSION_BUS_ADDRESS /dev/null
 
 WORKDIR	/home/test
 

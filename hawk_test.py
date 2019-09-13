@@ -7,6 +7,8 @@ import re
 import socket
 import sys
 
+from pyvirtualdisplay import Display
+
 import hawk_test_driver
 import hawk_test_ssh
 import hawk_test_results
@@ -44,7 +46,7 @@ def parse_args():
                         help='Virtual IP address in CIDR notation')
     parser.add_argument('-P', '--port', default='7630', type=check_port,
                         help='TCP port where HAWK is running')
-    parser.add_argument('-p', '--prefix',
+    parser.add_argument('-p', '--prefix', default='',
                         help='Prefix to add to Resources created during the test')
     parser.add_argument('-t', '--test-version', required=True,
                         help='Test version. Ex: 12-SP3, 12-SP4, 15, 15-SP1')
@@ -121,7 +123,12 @@ def main():
 
 
 if __name__ == "__main__":
+    DISPLAY = Display()
+    DISPLAY.start()
     try:
         sys.exit(main())
     except KeyboardInterrupt:
+        DISPLAY.stop()
         sys.exit(1)
+    finally:
+        DISPLAY.stop()
