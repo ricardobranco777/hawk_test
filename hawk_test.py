@@ -37,6 +37,12 @@ def check_port(port):
     raise argparse.ArgumentTypeError("%s is an invalid port number" % port)
 
 
+def sles_version(string):
+    if re.match(r"\d{2}(?:-SP\d)?$", string):
+        return string
+    raise argparse.ArgumentTypeError("%s is an invalid SLES version" % string)
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description='HAWK GUI interface Selenium test')
     parser.add_argument('-b', '--browser', required=True, choices=['firefox', 'chrome', 'chromium'],
@@ -49,8 +55,8 @@ def parse_args():
                         help='TCP port where HAWK is running')
     parser.add_argument('-p', '--prefix', default='',
                         help='Prefix to add to Resources created during the test')
-    parser.add_argument('-t', '--test-version', required=True,
-                        help='Test version. Ex: 12-SP3, 12-SP4, 15, 15-SP1')
+    parser.add_argument('-t', '--test-version', required=True, type=sles_version,
+                        help='Test SLES Version. Ex: 12-SP3, 12-SP4, 15, 15-SP1')
     parser.add_argument('-s', '--secret',
                         help='root SSH Password of the HAWK node')
     parser.add_argument('-r', '--results',
