@@ -68,6 +68,10 @@ def parse_args():
 def main():
     args = parse_args()
 
+    global DISPLAY  # pylint: disable=global-statement
+    DISPLAY = Display()
+    DISPLAY.start()
+
     # Create driver instance
     browser = hawk_test_driver.HawkTestDriver(addr=args.host.lower(), port=args.port,
                                               browser=args.browser.lower(),
@@ -130,8 +134,7 @@ def main():
 
 
 if __name__ == "__main__":
-    DISPLAY = Display()
-    DISPLAY.start()
+    DISPLAY = None
     try:
         sys.exit(main())
     except KeyboardInterrupt:
