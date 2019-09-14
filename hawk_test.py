@@ -31,10 +31,10 @@ def cidr_address(string):
         raise argparse.ArgumentTypeError("Invalid CIDR address: %s" % string)
 
 
-def check_port(port):
-    if port.isdigit() and 1 <= int(port) <= 65535:
-        return port
-    raise argparse.ArgumentTypeError("%s is an invalid port number" % port)
+def port(string):
+    if string.isdigit() and 1 <= int(string) <= 65535:
+        return string
+    raise argparse.ArgumentTypeError("%s is an invalid port number" % string)
 
 
 def sles_version(string):
@@ -51,7 +51,7 @@ def parse_args():
                         help='Host or IP address where HAWK is running')
     parser.add_argument('-I', '--virtual-ip', type=cidr_address,
                         help='Virtual IP address in CIDR notation')
-    parser.add_argument('-P', '--port', default='7630', type=check_port,
+    parser.add_argument('-P', '--port', default='7630', type=port,
                         help='TCP port where HAWK is running')
     parser.add_argument('-p', '--prefix', default='',
                         help='Prefix to add to Resources created during the test')
