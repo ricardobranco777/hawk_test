@@ -22,7 +22,6 @@ class HawkTestSSH:
         self.ssh.connect(hostname=hostname.lower(), username="root", password=secret)
 
     def check_cluster_conf_ssh(self, command, mustmatch):
-        command = str(command)
         resp = self.ssh.exec_command(command)
         out = resp[1].read().decode().rstrip('\n')
         err = resp[2].read().decode().rstrip('\n')
@@ -38,7 +37,7 @@ class HawkTestSSH:
             return out == mustmatch
         if isinstance(mustmatch, list):
             for exp in mustmatch:
-                if str(exp) not in out:
+                if exp not in out:
                     return False
             return True
         raise ValueError("check_cluster_conf_ssh: mustmatch must be str or list")
@@ -66,9 +65,9 @@ class HawkTestSSH:
         return False
 
     def verify_primitive(self, myprimitive, version, results):
-        matches = ["%s anything" % str(myprimitive), "binfile=file", "op start timeout=35s",
+        matches = ["%s anything" % myprimitive, "binfile=file", "op start timeout=35s",
                    "op monitor timeout=9s interval=13s", "meta target-role=Started"]
-        if Version(str(version)) < Version('15'):
+        if Version(version) < Version('15'):
             matches.append("op stop timeout=15s")
         else:
             matches.append("op stop timeout=15s on-fail=stop")

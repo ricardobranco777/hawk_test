@@ -75,7 +75,7 @@ class HawkTestDriver:
         self.timeout_scale = 1
         self.set_browser(browser)
         self.driver = ''
-        self.test_version = str(version)
+        self.test_version = version
         self.test_status = True
 
     def set_addr(self, addr):
@@ -132,8 +132,8 @@ class HawkTestDriver:
     # Some links by text are capitalized differently between the chrome and firefox drivers.
     def link_by_browser(self, linktext):
         if self.browser in ['chrome', 'chromium']:
-            return str(linktext).upper()
-        return str(linktext).capitalize()
+            return linktext.upper()
+        return linktext.capitalize()
 
     def _do_login(self):
         if self.driver:
@@ -160,13 +160,13 @@ class HawkTestDriver:
     # Clicks on element identified by clicker if major version from the test is greater or
     # equal than the version to check
     def click_if_major_version(self, version_to_check, clicker):
-        if Version(self.test_version) >= Version(str(version_to_check)):
+        if Version(self.test_version) >= Version(version_to_check):
             self.click_on(clicker)
 
     # Internal support function click_on partial link test. Sets test_status to False on failure
     def click_on(self, text):
         print("INFO: Main page. Click on %s" % text)
-        elem = self.find_element(By.PARTIAL_LINK_TEXT, str(text))
+        elem = self.find_element(By.PARTIAL_LINK_TEXT, text)
         if not elem:
             print("ERROR: Couldn't find element '%s'" % text)
             self.test_status = False
@@ -181,12 +181,10 @@ class HawkTestDriver:
         return True
 
     def find_element(self, bywhat, texto, tout=60):
-        tout = int(tout)
         if self.driver:
             try:
                 elem = WebDriverWait(self.driver,
-                                     tout).until(EC.presence_of_element_located((bywhat,
-                                                                                 str(texto))))
+                                     tout).until(EC.presence_of_element_located((bywhat, texto)))
             except TimeoutException:
                 print("INFO: %d seconds timeout while looking for element [%s] by [%s]" %
                       (tout, texto, bywhat))
@@ -203,15 +201,15 @@ class HawkTestDriver:
         return True
 
     def fill_value(self, field, tout):
-        elem = self.find_element(By.NAME, str(field))
+        elem = self.find_element(By.NAME, field)
         if not elem:
-            print("ERROR: couldn't find element [%s]." % str(field))
+            print("ERROR: couldn't find element [%s]." % field)
             return
         elem.clear()
-        elem.send_keys(str(tout) + "s")
+        elem.send_keys("%ss" % tout)
 
     def submit_operation_params(self, errmsg):
-        self.check_and_click_by_xpath(str(errmsg), [CLICK_OK_SUBMIT])
+        self.check_and_click_by_xpath(errmsg, [CLICK_OK_SUBMIT])
 
     def check_edit_conf(self):
         print("INFO: Check edit configuration")
@@ -222,13 +220,10 @@ class HawkTestDriver:
     # Internal support function to find element(s) by xpath and click them
     # Sets test_status to False on failure.
     def check_and_click_by_xpath(self, errmsg, xpath_exps):
-        if not isinstance(xpath_exps, list):
-            self.test_status = False
-            raise ValueError(XPATH_ERR_FMT % type(xpath_exps))
-        for exp in xpath_exps:
-            elem = self.find_element(By.XPATH, str(exp))
+        for xpath in xpath_exps:
+            elem = self.find_element(By.XPATH, xpath)
             if not elem:
-                print("ERROR: Couldn't find element by xpath [%s] %s" % (exp, errmsg))
+                print("ERROR: Couldn't find element by xpath [%s] %s" % (xpath, errmsg))
                 self.test_status = False
                 return
             try:
@@ -343,7 +338,7 @@ class HawkTestDriver:
         if not elem:
             print("ERROR: Couldn't find element [cluster[name]]. Cannot add cluster")
             return False
-        elem.send_keys(str(cluster_name))
+        elem.send_keys(cluster_name)
         elem = self.find_element(By.NAME, "cluster[host]")
         if not elem:
             print("ERROR: Couldn't find element [cluster[host]]. Cannot add cluster")
@@ -367,7 +362,7 @@ class HawkTestDriver:
         print("TEST: test_remove_cluster")
         self.click_on('Dashboard')
         self.check_and_click_by_xpath(". Click on Dashboard", [HREF_DASHBOARD])
-        elem = self.find_element(By.PARTIAL_LINK_TEXT, str(cluster_name))
+        elem = self.find_element(By.PARTIAL_LINK_TEXT, cluster_name)
         if not elem:
             print("ERROR: Couldn't find cluster [%s]. Cannot remove" % cluster_name)
             return False
@@ -507,7 +502,6 @@ class HawkTestDriver:
         return status
 
     def remove_rsc(self, name):
-        name = str(name)
         print("INFO: Remove Resource: %s" % name)
         self.check_edit_conf()
         self.check_and_click_by_xpath("Cannot edit or remove resource [%s]" % name,
@@ -544,7 +538,7 @@ class HawkTestDriver:
         if not elem:
             print("ERROR: Couldn't find element [clone[id]]. No text-field where to type clone id")
             return False
-        elem.send_keys(str(clone))
+        elem.send_keys(clone)
         self.check_and_click_by_xpath("while adding clone [%s]" % clone,
                                       [CLONE_CHILD, OPT_STONITH, TARGET_ROLE_FORMAT % 'clone',
                                        TARGET_ROLE_STARTED, RSC_OK_SUBMIT])
@@ -564,7 +558,7 @@ class HawkTestDriver:
         if not elem:
             print("ERROR: Couldn't find text-field [group[id]] to input group id")
             return False
-        elem.send_keys(str(group))
+        elem.send_keys(group)
         self.check_and_click_by_xpath("while adding group [%s]" % group,
                                       [STONITH_CHKBOX, TARGET_ROLE_FORMAT % 'group',
                                        TARGET_ROLE_STARTED, RSC_OK_SUBMIT])

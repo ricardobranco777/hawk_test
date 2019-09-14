@@ -43,8 +43,6 @@ class ResultSet:
             resfh.write(json.dumps(self.results_set))
 
     def set_test_status(self, testname, status):
-        status = str(status)
-        testname = str(testname)
         if status not in ['passed', 'failed', 'skipped']:
             raise ValueError('test status must be either [passed] or [failed]')
         if status == 'passed' and \
