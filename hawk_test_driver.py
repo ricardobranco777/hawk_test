@@ -70,37 +70,23 @@ TRASHBIN_BUTTOP_VIP_OK = '/html/body/div[5]/div/div/form/div[3]/button[2]'
 
 class HawkTestDriver:
     def __init__(self, addr='localhost', port='7630', browser='firefox', version='12-SP2'):
-        self.set_addr(addr)
-        self.set_port(port)
+        self.addr = addr
+        self.port = port
         self.timeout_scale = 1
         self.set_browser(browser)
         self.driver = ''
         self.test_version = version
         self.test_status = True
 
-    def set_addr(self, addr):
-        if isinstance(addr, str):
-            self.addr = addr
-        else:
-            raise ValueError('Unexpected type for host address')
-
-    def set_port(self, port):
-        port = str(port)
-        if port.isdigit() and 1 <= int(port) <= 65535:
-            self.port = port
-        else:
-            raise ValueError('Port must be an integer')
-
     def set_browser(self, browser):
         browser = browser.lower()
-        if browser in ['chrome', 'chromium', 'firefox']:
-            self.browser = browser
-            if browser == 'firefox':
-                self.timeout_scale = 2.5
-            else:
-                self.timeout_scale = 1
-        else:
+        if browser not in ['chrome', 'chromium', 'firefox']:
             raise ValueError('Browser must be chrome, chromium or firefox')
+        self.browser = browser
+        if browser == 'firefox':
+            self.timeout_scale = 2.5
+        else:
+            self.timeout_scale = 1
 
     def _connect(self):
         if self.browser in ['chrome', 'chromium']:
@@ -110,13 +96,11 @@ class HawkTestDriver:
             options.add_argument('--headless')
             options.add_argument('--disable-dev-shm-usage')
             self.driver = webdriver.Chrome(chrome_options=options)
-        elif self.browser == 'firefox':
+        else:
             profile = webdriver.FirefoxProfile()
             profile.accept_untrusted_certs = True
             profile.assume_untrusted_cert_issuer = True
             self.driver = webdriver.Firefox(firefox_profile=profile)
-        else:
-            raise ValueError('Browser must be chrome, chromium or firefox')
         self.driver.maximize_window()
         return self.driver
 
@@ -137,7 +121,7 @@ class HawkTestDriver:
 
     def _do_login(self):
         if self.driver:
-            mainlink = 'https://' + self.addr.lower() + ':' + self.port
+            mainlink = 'https://%s:%s' % (self.addr.lower(), self.port)
             self.driver.get(mainlink)
             elem = self.find_element(By.NAME, "session[username]")
             if not elem:
@@ -594,7 +578,7 @@ class HawkTestDriver:
         self.find_element(By.NAME, 'submit').click()
         old_addr = self.addr
         # Check that we can connect to the Wizard on the virtual IP
-        self.set_addr(virtual_ip)
+        self.addr = virtual_ip
         self._close()
         time.sleep(10)
         self._connect()
@@ -604,7 +588,7 @@ class HawkTestDriver:
             print("ERROR: Error while adding virtual IP")
             return False
         print("INFO: Successfully added virtual IP")
-        self.set_addr(old_addr)
+        self.addr = old_addr
         return True
 
     def test_remove_virtual_ip(self):
