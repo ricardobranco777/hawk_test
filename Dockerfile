@@ -19,7 +19,7 @@ RUN     apk --no-cache --virtual .build-deps add \
         ln -s /usr/local/bin/python3 /usr/bin/python3 && \
         apk del .build-deps
 
-RUN	wget -q -O- https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz | tar zxf - -C /usr/local/bin/
+RUN	wget -q -O- https://github.com/mozilla/geckodriver/releases/download/v0.25.0/geckodriver-v0.25.0-linux64.tar.gz | tar zxf - -C /usr/local/bin/
 
 RUN	adduser -D test
 
