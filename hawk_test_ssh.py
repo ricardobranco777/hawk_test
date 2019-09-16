@@ -22,9 +22,8 @@ class HawkTestSSH:
         self.ssh.connect(hostname=hostname.lower(), username="root", password=secret)
 
     def check_cluster_conf_ssh(self, command, mustmatch):
-        resp = self.ssh.exec_command(command)
-        out = resp[1].read().decode().rstrip('\n')
-        err = resp[2].read().decode().rstrip('\n')
+        _, out, err = self.ssh.exec_command(command)
+        out, err = map(lambda f: f.read().decode().rstrip('\n'), (out, err))
         print("INFO: ssh command [%s] got output [%s] and error [%s]" % (command, out, err))
         if err:
             print("ERROR: got an error over SSH: [%s]" % err)
