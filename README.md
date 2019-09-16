@@ -32,7 +32,14 @@ First you must create a world-writable directory (with the sticky bit set for se
 
 Run:
 
-```docker run --shm-size 64m -v $PWD/test:/test hawk_test [OPTIONS]```
+```docker run --shm-size 64m --xvfb -v $PWD/test:/test hawk_test [OPTIONS]```
+
+If you don't want to use the Xvfb headless mode:
+
+```
+xhost +
+docker run --shm-size 64m -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $PWD/test:/test hawk_test [OPTIONS]
+```
 
 Notes:
   - You may want to add `--net=host` if you have problems with DNS resolution.
@@ -54,6 +61,7 @@ Notes:
                         root SSH Password of the HAWK node
   -r RESULTS, --results RESULTS
                         Generate hawk_test.results file
+  --xvfb                Use Xvfb. Headless mode
 ```
 
 ## FAQ

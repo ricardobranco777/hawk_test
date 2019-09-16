@@ -61,6 +61,8 @@ def parse_args():
                         help='root SSH Password of the HAWK node')
     parser.add_argument('-r', '--results',
                         help='Generate hawk_test.results file')
+    parser.add_argument('--xvfb', action='store_true',
+                        help='Use Xvfb. Headless mode')
     args = parser.parse_args()
     return args
 
@@ -68,9 +70,10 @@ def parse_args():
 def main():
     args = parse_args()
 
-    global DISPLAY  # pylint: disable=global-statement
-    DISPLAY = Display()
-    DISPLAY.start()
+    if args.xvfb:
+        global DISPLAY  # pylint: disable=global-statement
+        DISPLAY = Display()
+        DISPLAY.start()
 
     # Create driver instance
     browser = hawk_test_driver.HawkTestDriver(addr=args.host.lower(), port=args.port,
@@ -138,7 +141,9 @@ if __name__ == "__main__":
     try:
         sys.exit(main())
     except KeyboardInterrupt:
-        DISPLAY.stop()
+        if DISPLAY is not None:
+            DISPLAY.stop()
         sys.exit(1)
     finally:
-        DISPLAY.stop()
+        if DISPLAY is not None:
+            DISPLAY.stop()
