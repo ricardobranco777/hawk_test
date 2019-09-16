@@ -24,7 +24,9 @@ RUN	wget -q -O- https://github.com/mozilla/geckodriver/releases/download/v0.25.0
 RUN	adduser -D test -h /test
 
 COPY	*.py /
-RUN	chmod +x /hawk_test.py
+RUN	chmod +x /hawk_test.py && \
+	python -OO -m compileall && \
+	python -OO -m compileall /*.py
 
 ENV     PYTHONPATH /
 ENV	PYTHONUNBUFFERED 1
