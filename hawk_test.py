@@ -77,7 +77,7 @@ def main():
 
     # Create driver instance
     browser = hawk_test_driver.HawkTestDriver(addr=args.host.lower(), port=args.port,
-                                              browser=args.browser.lower(),
+                                              browser=args.browser.lower(), headless=args.xvfb,
                                               version=args.test_version.lower())
 
     # Initialize results set

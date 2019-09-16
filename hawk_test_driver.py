@@ -69,7 +69,7 @@ TRASHBIN_BUTTOP_VIP_OK = '/html/body/div[5]/div/div/form/div[3]/button[2]'
 
 
 class HawkTestDriver:
-    def __init__(self, addr='localhost', port='7630', browser='firefox', version='12-SP2'):
+    def __init__(self, addr='localhost', port='7630', browser='firefox', headless=False, version='12-SP2'):
         self.addr = addr
         self.port = port
         self.timeout_scale = 1
@@ -77,6 +77,7 @@ class HawkTestDriver:
         self.driver = ''
         self.test_version = version
         self.test_status = True
+        self.headless = headless
 
     def set_browser(self, browser):
         browser = browser.lower()
@@ -93,7 +94,8 @@ class HawkTestDriver:
             options = webdriver.ChromeOptions()
             options.add_argument('--no-sandbox')
             options.add_argument('--disable-gpu')
-            options.add_argument('--headless')
+            if self.headless:
+                options.add_argument('--headless')
             options.add_argument('--disable-dev-shm-usage')
             self.driver = webdriver.Chrome(chrome_options=options)
         else:
