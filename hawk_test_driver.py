@@ -190,7 +190,7 @@ class HawkTestDriver:
             print("ERROR: couldn't find element [%s]." % field)
             return
         elem.clear()
-        elem.send_keys("%ss" % tout)
+        elem.send_keys("%s" % tout)
 
     def submit_operation_params(self, errmsg):
         self.check_and_click_by_xpath(errmsg, [CLICK_OK_SUBMIT])
@@ -452,20 +452,20 @@ class HawkTestDriver:
         # Set start timeout value in 35s
         self.check_and_click_by_xpath("Couldn't find edit button for start operation",
                                       [EDIT_START_TIMEOUT, MODAL_TIMEOUT])
-        self.fill_value('op[timeout]', 35)
+        self.fill_value('op[timeout]', "35s")
         self.submit_operation_params(". Couldn't Apply changes for start operation")
         # Set stop timeout value in 15s and on-fail
         self.check_and_click_by_xpath("Couldn't find edit button for stop operation",
                                       [EDIT_STOP_TIMEOUT, MODAL_TIMEOUT])
-        self.fill_value('op[timeout]', 15)
+        self.fill_value('op[timeout]', "15s")
         self.check_and_click_by_xpath("Couldn't add on-fail option for stop operation",
                                       [MODAL_STOP])
         self.submit_operation_params(". Couldn't Apply changes for stop operation")
         # Set monitor timeout value in 9s and interval in 13s
         self.check_and_click_by_xpath("Couldn't find edit button for monitor operation",
                                       [EDIT_MONITOR_TIMEOUT, MODAL_MONITOR_TIMEOUT])
-        self.fill_value('op[timeout]', 9)
-        self.fill_value('op[interval]', 13)
+        self.fill_value('op[timeout]', "9s")
+        self.fill_value('op[interval]', "13s")
         self.submit_operation_params(". Couldn't Apply changes for monitor operation")
         elem = self.find_element(By.NAME, 'primitive[meta][target-role]')
         if not elem:
@@ -569,10 +569,10 @@ class HawkTestDriver:
         self.find_element(By.LINK_TEXT, 'Wizards').click()
         self.check_and_click_by_xpath('while clicking Basic', [WIZARDS_BASIC])
         self.click_on('Virtual IP')
-        self.find_element(By.NAME, 'virtual-ip.id').send_keys('vip')
-        self.find_element(By.NAME, 'virtual-ip.ip').send_keys(virtual_ip)
-        self.find_element(By.NAME, 'virtual-ip.cidr_netmask').send_keys(netmask)
-        self.find_element(By.NAME, 'virtual-ip.broadcast').send_keys(broadcast)
+        self.fill_value('virtual-ip.id', 'vip')
+        self.fill_value('virtual-ip.ip', virtual_ip)
+        self.fill_value('virtual-ip.cidr_netmask', netmask)
+        self.fill_value('virtual-ip.broadcast', broadcast)
         self.find_element(By.NAME, 'submit').click()
         self.find_element(By.NAME, 'submit').click()
         if not self.verify_success():
