@@ -26,8 +26,13 @@ Usage: hawk_test.py [-h] -b {firefox,chrome,chromium} [-H HOST]
 
 ## Usage with Docker
 
+First you must create a world-writable directory (with the sticky bit set for security):
 
-```docker run --shm-size 64m hawk_test [OPTIONS]```
+`mkdir -m 1777 test/`
+
+Run:
+
+```docker run --shm-size 64m -v $PWD/test:/test hawk_test [OPTIONS]```
 
 Notes:
   - You may want to add `--net=host` if you have problems with DNS resolution.

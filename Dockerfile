@@ -21,17 +21,16 @@ RUN     apk --no-cache --virtual .build-deps add \
 
 RUN	wget -q -O- https://github.com/mozilla/geckodriver/releases/download/v0.25.0/geckodriver-v0.25.0-linux64.tar.gz | tar zxf - -C /usr/local/bin/
 
-RUN	adduser -D test
+RUN	adduser -D test -h /test
 
-COPY	*.py /home/test/
-RUN	chown -R test.test /home/test
-RUN	chmod +x /home/test/hawk_test.py
+COPY	*.py /
+RUN	chmod +x /hawk_test.py
 
-ENV     PYTHONPATH .
+ENV     PYTHONPATH /
 ENV	PYTHONUNBUFFERED 1
 ENV	DBUS_SESSION_BUS_ADDRESS /dev/null
 
-WORKDIR	/home/test
+WORKDIR	/test
 
 USER	test
-ENTRYPOINT ["/home/test/hawk_test.py"]
+ENTRYPOINT ["/hawk_test.py"]
