@@ -16,7 +16,6 @@ RUN     apk --no-cache --virtual .build-deps add \
 		xdpyinfo \
 		xvfb && \
         pip install --no-cache-dir -r /tmp/requirements.txt && \
-        ln -s /usr/local/bin/python3 /usr/bin/python3 && \
         apk del .build-deps
 
 RUN	wget -q -O- https://github.com/mozilla/geckodriver/releases/download/v0.25.0/geckodriver-v0.25.0-linux64.tar.gz | tar zxf - -C /usr/local/bin/
@@ -24,8 +23,7 @@ RUN	wget -q -O- https://github.com/mozilla/geckodriver/releases/download/v0.25.0
 RUN	adduser -D test -h /test
 
 COPY	*.py /
-RUN	chmod +x /hawk_test.py && \
-	python -OO -m compileall && \
+RUN	python -OO -m compileall && \
 	python -OO -m compileall /*.py
 
 ENV     PYTHONPATH /
@@ -35,4 +33,4 @@ ENV	DBUS_SESSION_BUS_ADDRESS /dev/null
 WORKDIR	/test
 
 USER	test
-ENTRYPOINT ["/hawk_test.py"]
+ENTRYPOINT ["/usr/local/bin/python3", "/hawk_test.py"]
