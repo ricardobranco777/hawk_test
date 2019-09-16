@@ -21,9 +21,10 @@ class ResultSet:
             auxd = {'name': test, 'test_index': 0, 'outcome': 'failed'}
             self.results_set['tests'].append(auxd)
         self.results_set['info']['timestamp'] = time.time()
-        with open('/etc/os-release', 'r') as file:
-            osrel = file.read()
-        osrel = osrel[osrel.find('\nPRETTY_NAME=') + 14:len(osrel)]
+        with open('/etc/os-release') as file:
+            lines = file.read().splitlines()
+        osrel = {k: v[1:-1] for (k, v) in [line.split('=') for line in lines if '=' in line]}
+        osrel = osrel['PRETTY_NAME']
         self.results_set['info']['distro'] = str(osrel[0:osrel.find('\n') - 1])
         self.results_set['info']['results_file'] = 'hawk_test.results'
         self.results_set['summary']['duration'] = 0
