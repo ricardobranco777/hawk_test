@@ -63,9 +63,7 @@ TARGET_ROLE_FORMAT = ('//select[contains(@class, "form-control") and '
                       'contains(@name, "%s[meta][target-role]")]')
 STONITH_MAINT_OFF = ('//a[contains(@href, "stonith-sbd") and '
                      'contains(@title, "Disable Maintenance Mode")]')
-WIZARDS_BASIC = '/html/body/div[2]/div[2]/div/div/div[1]/div[2]/div[2]/ul/li[1]/span'
-TRASHBIN_BUTTON_VIP = '/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/div/div[2]/div/div[1]/div[1]/div[2]/div[2]/table/tbody/tr[2]/td[4]/div/a[3]/i'
-TRASHBIN_BUTTOP_VIP_OK = '/html/body/div[5]/div/div/form/div[3]/button[2]'
+WIZARDS_BASIC = '//span[contains(@href, "basic")]'
 
 
 class HawkTestDriver:
@@ -575,10 +573,11 @@ class HawkTestDriver:
         self.find_element(By.NAME, 'virtual-ip.ip').send_keys(virtual_ip)
         self.find_element(By.NAME, 'virtual-ip.cidr_netmask').send_keys(netmask)
         self.find_element(By.NAME, 'virtual-ip.broadcast').send_keys(broadcast)
-        time.sleep(5)
         self.find_element(By.NAME, 'submit').click()
-        time.sleep(10)
         self.find_element(By.NAME, 'submit').click()
+        if not self.verify_success():
+            print("ERROR: Error while adding virtual IP")
+            return False
         old_addr = self.addr
         # Check that we can connect to the Wizard on the virtual IP
         self.addr = virtual_ip
@@ -596,8 +595,5 @@ class HawkTestDriver:
 
     def test_remove_virtual_ip(self):
         print("TEST: test_remove_virtual_ip: Remove virtual IP")
-        self.click_on('Edit Configuration')
-        self.check_and_click_by_xpath('while clicking trashbin button',
-                                      [TRASHBIN_BUTTON_VIP, TRASHBIN_BUTTOP_VIP_OK])
-        time.sleep(5)
+        self.remove_rsc("vip")
         return True
