@@ -575,11 +575,8 @@ class HawkTestDriver:
         self.fill_value('virtual-ip.broadcast', broadcast)
         self.find_element(By.NAME, 'submit').click()
         self.find_element(By.NAME, 'submit').click()
-        if not self.verify_success():
-            print("ERROR: Error while adding virtual IP")
-            return False
-        old_addr = self.addr
         # Check that we can connect to the Wizard on the virtual IP
+        old_addr = self.addr
         self.addr = virtual_ip
         self._close()
         time.sleep(10)
