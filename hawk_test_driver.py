@@ -231,6 +231,7 @@ class HawkTestDriver:
                 self.set_test_status(results, testname, 'passed')
             else:
                 self.set_test_status(results, testname, 'failed')
+                self.driver.save_screenshot('%s.png' % testname)
         self._close()
 
     # Set STONITH/sbd in maintenance. Assumes stonith-sbd resource is the last one listed on the
