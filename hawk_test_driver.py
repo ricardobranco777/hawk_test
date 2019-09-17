@@ -53,7 +53,7 @@ DROP_DOWN_FORMAT = '//*[@id="resources"]/div[1]/div[2]/div[2]/table/tbody/tr[%d]
 STONITH_MAINT_ON = '//a[contains(@href, "stonith-sbd/maintenance_on")]'
 NODE_DETAILS = '//*[@id="nodes"]/div[1]/div[2]/div[2]/table/tbody/tr[1]/td[5]/div/a[2]'
 DISMISS_MODAL = '//*[@id="modal"]/div/div/div[3]/button'
-CLEAR_STATE = '//*[@id="nodes"]/div[1]/div[2]/div[2]/table/tbody/tr[1]/td[5]/div/div/button'
+OPERATIONS = '//*[@id="nodes"]/div[1]/div[2]/div[2]/table/tbody/tr[1]/td[5]/div/div/button'
 NODE_MAINT = '//a[contains(@href, "maintenance") and contains(@title, "Switch to maintenance")]'
 NODE_READY = '//a[contains(@href, "ready") and contains(@title, "Switch to ready")]'
 GENERATE_REPORT = '//*[@id="generate"]/form/div/div[2]/button'
@@ -277,7 +277,7 @@ class HawkTestDriver:
         self.click_on('Nodes')
         self.check_and_click_by_xpath("Click on Nodes", [HREF_NODES])
         self.check_and_click_by_xpath("Could not find pull down menu for first cluster node",
-                                      [CLEAR_STATE])
+                                      [OPERATIONS])
         self.click_on('Clear state')
         self.check_and_click_by_xpath("Could not clear the state of the first node",
                                       [COMMIT_BTN_DANGER])
@@ -596,3 +596,16 @@ class HawkTestDriver:
         print("TEST: test_remove_virtual_ip: Remove virtual IP")
         self.remove_rsc("vip")
         return True
+
+    def test_fencing(self):
+        print("TEST: test_fencing")
+        self.click_on('Nodes')
+        self.check_and_click_by_xpath("Click on Nodes", [OPERATIONS])
+        self.click_on('Fence')
+        self.check_and_click_by_xpath("Could not fence first node",
+                                      [COMMIT_BTN_DANGER])
+        if self.verify_success():
+            print("INFO: Master node successfully fenced")
+            return True
+        print("ERROR: Could not fence master node")
+        return False
