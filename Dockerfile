@@ -1,4 +1,8 @@
-FROM	registry.opensuse.org/opensuse/leap
+# Defines the tag for OBS and build script builds:
+#!BuildTag: hawk_test
+# use the repositories defined in OBS for installing packages
+#!UseOBSRepositories
+FROM opensuse/leap:15.1
 
 RUN	zypper -n install python3 python3-pip firefox chromium shadow xdpyinfo xorg-x11-server && \
 	zypper -n clean -a
