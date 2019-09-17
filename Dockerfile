@@ -18,7 +18,7 @@ RUN     apk --no-cache --virtual .build-deps add \
         pip install --no-cache-dir -r /tmp/requirements.txt && \
         apk del .build-deps
 
-RUN	wget -q -O- https://github.com/mozilla/geckodriver/releases/download/v0.25.0/geckodriver-v0.25.0-linux64.tar.gz | tar zxf - -C /usr/local/bin/
+ADD     https://github.com/mozilla/geckodriver/releases/download/v0.25.0/geckodriver-v0.25.0-linux64.tar.gz /usr/local/bin/
 
 RUN	adduser -D test -h /test
 
