@@ -4,7 +4,7 @@
 #!UseOBSRepositories
 FROM opensuse/leap:15.1
 
-RUN	zypper -n install python3 python3-pip firefox chromium shadow xdpyinfo xorg-x11-server && \
+RUN	zypper -n install -y python3 python3-pip firefox chromium shadow xdpyinfo xorg-x11-server && \
 	zypper -n clean -a
 
 COPY    requirements.txt /tmp
