@@ -574,7 +574,9 @@ class HawkTestDriver:
         self.fill_value('virtual-ip.cidr_netmask', netmask)
         self.fill_value('virtual-ip.broadcast', broadcast)
         self.find_element(By.NAME, 'submit').click()
+        time.sleep(3)
         self.find_element(By.NAME, 'submit').click()
+        time.sleep(3)
         # Check that we can connect to the Wizard on the virtual IP
         old_addr = self.addr
         self.addr = virtual_ip
