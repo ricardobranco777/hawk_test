@@ -7,19 +7,18 @@ FROM	opensuse/leap:15.1
 RUN	zypper -n install -y --no-recommends \
 		MozillaFirefox-branding-upstream \
 		chromium \
-		gzip \
 		python3 \
 		python3-paramiko \
 		python3-pip \
 		python3-PyVirtualDisplay \
 		python3-selenium \
 		shadow \
-		tar \
-		wget \
 		xdpyinfo \
 		xorg-x11-server && \
 	zypper -n clean -a
 
+COPY	geckodriver /usr/local/bin/
+RUN	chmod +x /usr/local/bin/geckodriver
 RUN	wget -q -O- https://github.com/mozilla/geckodriver/releases/download/v0.25.0/geckodriver-v0.25.0-linux64.tar.gz | tar zxf - -C /usr/local/bin/
 
 RUN	useradd -l -m -d /test test
