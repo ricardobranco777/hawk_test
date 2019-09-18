@@ -5,6 +5,7 @@
 FROM	opensuse/tumbleweed
 
 RUN	zypper -n install -y --no-recommends \
+		MozillaFirefox \
 		MozillaFirefox-branding-upstream \
 		chromium \
 		python3 \
