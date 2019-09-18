@@ -19,7 +19,6 @@ RUN	zypper -n install -y --no-recommends \
 
 COPY	geckodriver /usr/local/bin/
 RUN	chmod +x /usr/local/bin/geckodriver
-RUN	wget -q -O- https://github.com/mozilla/geckodriver/releases/download/v0.25.0/geckodriver-v0.25.0-linux64.tar.gz | tar zxf - -C /usr/local/bin/
 
 RUN	useradd -l -m -d /test test
 
