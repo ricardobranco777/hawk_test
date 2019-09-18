@@ -28,6 +28,10 @@ Usage: hawk_test.py [-h] -b {firefox,chrome,chromium} [-H HOST]
 
 ## Usage with Docker
 
+Build image with:
+
+`docker build -t hawk_test -f Dockerfile.alpine`
+
 First you must create a world-writable directory (with the sticky bit set for security):
 
 `mkdir -m 1777 test/`
