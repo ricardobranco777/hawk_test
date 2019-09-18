@@ -13,6 +13,8 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
 
 # Error messages
 STONITH_ERR = ". Couldn't find stonith-sbd menu to place it in maintenance mode"
@@ -97,10 +99,13 @@ class HawkTestDriver:
             options.add_argument('--disable-dev-shm-usage')
             self.driver = webdriver.Chrome(chrome_options=options)
         else:
+            # Stupid hack to get Firefox to work on opensuse/leap images with older Firefox versions
+            cap = DesiredCapabilities().FIREFOX
+            cap["marionette"] = False
             profile = webdriver.FirefoxProfile()
             profile.accept_untrusted_certs = True
             profile.assume_untrusted_cert_issuer = True
-            self.driver = webdriver.Firefox(firefox_profile=profile)
+            self.driver = webdriver.Firefox(firefox_profile=profile, capabilities=cap)
         self.driver.maximize_window()
         return self.driver
 
