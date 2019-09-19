@@ -49,6 +49,8 @@ def parse_args():
                         help='Browser to use in the test')
     parser.add_argument('-H', '--host', default='localhost', type=hostname,
                         help='Host or IP address where HAWK is running')
+    parser.add_argument('-S', '--slave', default='', type=hostname,
+                        help='Host or IP address of the slave')
     parser.add_argument('-I', '--virtual-ip', type=cidr_address,
                         help='Virtual IP address in CIDR notation')
     parser.add_argument('-P', '--port', default='7630', type=port,
@@ -128,7 +130,9 @@ def main():
     browser.test('test_add_group', results, mygroup)
     browser.test('test_remove_group', results, mygroup)
     browser.test('test_click_around_edit_conf', results)
-    browser.test('test_fencing', results)
+    if args.slave:
+        browser.addr = args.slave
+        browser.test('test_fencing', results)
 
     # Save results if run with -r or --results
     if args.results:
