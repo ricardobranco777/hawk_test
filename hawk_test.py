@@ -128,6 +128,7 @@ def main():
     browser.test('test_add_group', results, mygroup)
     browser.test('test_remove_group', results, mygroup)
     browser.test('test_click_around_edit_conf', results)
+    browser.test('test_fencing', results)
 
     # Save results if run with -r or --results
     if args.results:
