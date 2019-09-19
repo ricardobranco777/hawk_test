@@ -8,13 +8,14 @@ RUN	zypper -n install -y --no-recommends \
 		MozillaFirefox \
 		MozillaFirefox-branding-upstream \
 		chromium \
+		file \
 		python3 \
 		python3-paramiko \
-		python3-pip \
 		python3-PyVirtualDisplay \
 		python3-selenium \
 		shadow \
 		xdpyinfo \
+		xorg-x11-fonts \
 		xorg-x11-server && \
 	zypper -n clean -a
 
