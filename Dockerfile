@@ -20,7 +20,8 @@ RUN	zypper -n install -y --no-recommends \
 	zypper -n clean -a
 
 COPY	geckodriver /usr/local/bin/
-RUN	chmod +x /usr/local/bin/geckodriver
+COPY	chromedriver /usr/local/bin/
+RUN	chmod +x /usr/local/bin/*
 
 RUN	useradd -l -m -d /test test
 
