@@ -103,6 +103,9 @@ def main():
     if args.virtual_ip:
         browser.test('test_add_virtual_ip', results, args.virtual_ip)
         browser.test('test_remove_virtual_ip', results)
+    else:
+        results.set_test_status('test_add_virtual_ip', 'skipped')
+        results.set_test_status('test_remove_virtual_ip', 'skipped')
     browser.test('test_set_stonith_maintenance', results)
     if args.secret:
         ssh.verify_stonith_in_maintenance(results)
@@ -133,6 +136,8 @@ def main():
     if args.slave:
         browser.addr = args.slave
         browser.test('test_fencing', results)
+    else:
+        results.set_test_status('test_fencing', 'skipped')
 
     # Save results if run with -r or --results
     if args.results:
