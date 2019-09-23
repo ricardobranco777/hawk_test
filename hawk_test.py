@@ -49,7 +49,7 @@ def parse_args():
                         help='Browser to use in the test')
     parser.add_argument('-H', '--host', default='localhost', type=hostname,
                         help='Host or IP address where HAWK is running')
-    parser.add_argument('-S', '--slave', default='', type=hostname,
+    parser.add_argument('-S', '--slave', type=hostname,
                         help='Host or IP address of the slave')
     parser.add_argument('-I', '--virtual-ip', type=cidr_address,
                         help='Virtual IP address in CIDR notation')
