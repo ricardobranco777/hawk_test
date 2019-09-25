@@ -78,7 +78,6 @@ class HawkTestDriver:
         self.headless = headless
 
     def set_browser(self, browser):
-        browser = browser.lower()
         if browser not in ['chrome', 'chromium', 'firefox']:
             raise ValueError('Browser must be chrome, chromium or firefox')
         self.browser = browser
@@ -121,7 +120,7 @@ class HawkTestDriver:
 
     def _do_login(self):
         if self.driver:
-            mainlink = 'https://%s:%s' % (self.addr.lower(), self.port)
+            mainlink = 'https://%s:%s' % (self.addr, self.port)
             self.driver.get(mainlink)
             elem = self.find_element(By.NAME, "session[username]")
             if not elem:
@@ -328,7 +327,7 @@ class HawkTestDriver:
         if not elem:
             print("ERROR: Couldn't find element [cluster[host]]. Cannot add cluster")
             return False
-        elem.send_keys(self.addr.lower())
+        elem.send_keys(self.addr)
         elem = self.find_element(By.NAME, "submit")
         if not elem:
             print("ERROR: Couldn't find submit button")

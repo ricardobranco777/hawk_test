@@ -78,25 +78,25 @@ def main():
         DISPLAY.start()
 
     # Create driver instance
-    browser = hawk_test_driver.HawkTestDriver(addr=args.host.lower(), port=args.port,
-                                              browser=args.browser.lower(), headless=args.xvfb,
+    browser = hawk_test_driver.HawkTestDriver(addr=args.host, port=args.port,
+                                              browser=args.browser, headless=args.xvfb,
                                               version=args.test_version.lower())
 
     # Initialize results set
     results = hawk_test_results.ResultSet()
 
     # Establish SSH connection to verify status
-    ssh = hawk_test_ssh.HawkTestSSH(args.host.lower(), args.secret)
+    ssh = hawk_test_ssh.HawkTestSSH(args.host, args.secret)
     results.add_ssh_tests()
 
     # Resources to create
-    if args.prefix and not re.match(r"^\w+$", args.prefix.lower()):
+    if args.prefix and not re.match(r"^\w+$", args.prefix):
         print("ERROR: Prefix must contain only numbers and letters. Ignoring")
         args.prefix = ''
-    mycluster = args.prefix.lower() + 'Anderes'
-    myprimitive = args.prefix.lower() + 'cool_primitive'
-    myclone = args.prefix.lower() + 'cool_clone'
-    mygroup = args.prefix.lower() + 'cool_group'
+    mycluster = args.prefix + 'Anderes'
+    myprimitive = args.prefix + 'cool_primitive'
+    myclone = args.prefix + 'cool_clone'
+    mygroup = args.prefix + 'cool_group'
 
     # Tests to perform
     if args.virtual_ip:
@@ -120,7 +120,7 @@ def main():
     browser.test('test_click_on_command_log', results)
     browser.test('test_click_on_status', results)
     browser.test('test_add_primitive', results, myprimitive)
-    ssh.verify_primitive(myprimitive, args.test_version.lower(), results)
+    ssh.verify_primitive(myprimitive, args.test_version, results)
     browser.test('test_remove_primitive', results, myprimitive)
     ssh.verify_primitive_removed(myprimitive, results)
     browser.test('test_add_clone', results, myclone)
