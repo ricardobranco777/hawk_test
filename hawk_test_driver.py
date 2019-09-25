@@ -72,7 +72,7 @@ class HawkTestDriver:
         self.port = port
         self.timeout_scale = 1
         self.set_browser(browser)
-        self.driver = ''
+        self.driver = None
         self.test_version = version
         self.test_status = True
         self.headless = headless
@@ -106,7 +106,6 @@ class HawkTestDriver:
     def _close(self):
         self.click_on('Logout')
         self.driver.quit()
-        self.driver = ''
 
     @staticmethod
     def set_test_status(results, testname, status):
@@ -119,26 +118,22 @@ class HawkTestDriver:
         return linktext.capitalize()
 
     def _do_login(self):
-        if self.driver:
-            mainlink = 'https://%s:%s' % (self.addr, self.port)
-            self.driver.get(mainlink)
-            elem = self.find_element(By.NAME, "session[username]")
-            if not elem:
-                print("ERROR: couldn't find element [session[username]]. Cannot login")
-                self.driver.quit()
-                self.driver = ''
-                return False
-            elem.send_keys("hacluster")
-            elem = self.find_element(By.NAME, "session[password]")
-            if not elem:
-                print("ERROR: Couldn't find element [session[password]]. Cannot login")
-                self.driver.quit()
-                self.driver = ''
-                return False
-            elem.send_keys("linux")
-            elem.send_keys(Keys.RETURN)
-            return True
-        return False
+        mainlink = 'https://%s:%s' % (self.addr, self.port)
+        self.driver.get(mainlink)
+        elem = self.find_element(By.NAME, "session[username]")
+        if not elem:
+            print("ERROR: couldn't find element [session[username]]. Cannot login")
+            self.driver.quit()
+            return False
+        elem.send_keys("hacluster")
+        elem = self.find_element(By.NAME, "session[password]")
+        if not elem:
+            print("ERROR: Couldn't find element [session[password]]. Cannot login")
+            self.driver.quit()
+            return False
+        elem.send_keys("linux")
+        elem.send_keys(Keys.RETURN)
+        return True
 
     # Clicks on element identified by clicker if major version from the test is greater or
     # equal than the version to check
@@ -164,16 +159,14 @@ class HawkTestDriver:
         return True
 
     def find_element(self, bywhat, texto, tout=60):
-        if self.driver:
-            try:
-                elem = WebDriverWait(self.driver,
-                                     tout).until(EC.presence_of_element_located((bywhat, texto)))
-            except TimeoutException:
-                print("INFO: %d seconds timeout while looking for element [%s] by [%s]" %
-                      (tout, texto, bywhat))
-                return False
-            return elem
-        return False
+        try:
+            elem = WebDriverWait(self.driver,
+                                 tout).until(EC.presence_of_element_located((bywhat, texto)))
+        except TimeoutException:
+            print("INFO: %d seconds timeout while looking for element [%s] by [%s]" %
+                  (tout, texto, bywhat))
+            return False
+        return elem
 
     def verify_success(self):
         elem = self.find_element(By.CLASS_NAME, 'alert-success', 60)
@@ -238,11 +231,9 @@ class HawkTestDriver:
     def test_set_stonith_maintenance(self):
         # wait for page to fully load
         if self.find_element(By.XPATH, RSC_ROWS):
-            totalrows = 1
-            if self.driver:
-                totalrows = len(self.driver.find_elements_by_xpath(RSC_ROWS))
-                if totalrows <= 0:
-                    totalrows = 1
+            totalrows = len(self.driver.find_elements_by_xpath(RSC_ROWS))
+            if not totalrows:
+               totalrows = 1
             print("TEST: test_set_stonith_maintenance: Placing stonith-sbd in maintenance")
             self.check_and_click_by_xpath(STONITH_ERR, [DROP_DOWN_FORMAT % totalrows,
                                                         STONITH_MAINT_ON, COMMIT_BTN_DANGER])
