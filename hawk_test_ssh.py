@@ -3,15 +3,7 @@
 """Define SSH related functions to test the HAWK GUI"""
 
 from distutils.version import LooseVersion as Version
-import warnings
 import paramiko
-
-# Ignore CryptographyDeprecationWarning shown when using paramiko
-try:
-    from cryptography.utils import CryptographyDeprecationWarning
-    warnings.simplefilter('ignore', CryptographyDeprecationWarning)
-except ImportError:
-    pass
 
 
 class HawkTestSSH:
