@@ -85,10 +85,9 @@ def main():
     # Initialize results set
     results = hawk_test_results.ResultSet()
 
-    # Establish SSH connection to verify status only if SSH password was supplied
-    if args.secret:
-        ssh = hawk_test_ssh.HawkTestSSH(args.host.lower(), args.secret)
-        results.add_ssh_tests()
+    # Establish SSH connection to verify status
+    ssh = hawk_test_ssh.HawkTestSSH(args.host.lower(), args.secret)
+    results.add_ssh_tests()
 
     # Resources to create
     if args.prefix and not re.match(r"^\w+$", args.prefix.lower()):
@@ -107,14 +106,12 @@ def main():
         results.set_test_status('test_add_virtual_ip', 'skipped')
         results.set_test_status('test_remove_virtual_ip', 'skipped')
     browser.test('test_set_stonith_maintenance', results)
-    if args.secret:
-        ssh.verify_stonith_in_maintenance(results)
+    ssh.verify_stonith_in_maintenance(results)
     browser.test('test_disable_stonith_maintenance', results)
     browser.test('test_view_details_first_node', results)
     browser.test('test_clear_state_first_node', results)
     browser.test('test_set_first_node_maintenance', results)
-    if args.secret:
-        ssh.verify_node_maintenance(results)
+    ssh.verify_node_maintenance(results)
     browser.test('test_disable_maintenance_first_node', results)
     browser.test('test_add_new_cluster', results, mycluster)
     browser.test('test_remove_cluster', results, mycluster)
@@ -123,11 +120,9 @@ def main():
     browser.test('test_click_on_command_log', results)
     browser.test('test_click_on_status', results)
     browser.test('test_add_primitive', results, myprimitive)
-    if args.secret:
-        ssh.verify_primitive(myprimitive, args.test_version.lower(), results)
+    ssh.verify_primitive(myprimitive, args.test_version.lower(), results)
     browser.test('test_remove_primitive', results, myprimitive)
-    if args.secret:
-        ssh.verify_primitive_removed(myprimitive, results)
+    ssh.verify_primitive_removed(myprimitive, results)
     browser.test('test_add_clone', results, myclone)
     browser.test('test_remove_clone', results, myclone)
     browser.test('test_add_group', results, mygroup)
