@@ -45,7 +45,7 @@ def sles_version(string):
 
 def parse_args():
     parser = argparse.ArgumentParser(description='HAWK GUI interface Selenium test')
-    parser.add_argument('-b', '--browser', required=True, choices=['firefox', 'chrome', 'chromium'],
+    parser.add_argument('-b', '--browser', default='firefox', choices=['firefox', 'chrome', 'chromium'],
                         help='Browser to use in the test')
     parser.add_argument('-H', '--host', default='localhost', type=hostname,
                         help='Host or IP address where HAWK is running')
