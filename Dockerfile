@@ -2,11 +2,11 @@
 #!BuildTag: hawk_test
 # Use the repositories defined in OBS for installing packages
 #!UseOBSRepositories
-FROM	opensuse/leap:15.1
+FROM	opensuse/tumbleweed
 
-RUN	zypper ar http://download.opensuse.org/repositories/mozilla/openSUSE_Leap_15.1/mozilla.repo && \
-RUN	zypper --gpg-auto-import-keys -n install -y --no-recommends \
+RUN	zypper -n install -y --no-recommends \
 		MozillaFirefox \
+		MozillaFirefox-branding-upstream \
 		chromium \
 		file \
 		python3 \
