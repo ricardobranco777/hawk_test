@@ -233,7 +233,7 @@ class HawkTestDriver:
         if self.find_element(By.XPATH, RSC_ROWS):
             totalrows = len(self.driver.find_elements_by_xpath(RSC_ROWS))
             if not totalrows:
-               totalrows = 1
+                totalrows = 1
             print("TEST: test_set_stonith_maintenance: Placing stonith-sbd in maintenance")
             self.check_and_click_by_xpath(STONITH_ERR, [DROP_DOWN_FORMAT % totalrows,
                                                         STONITH_MAINT_ON, COMMIT_BTN_DANGER])
