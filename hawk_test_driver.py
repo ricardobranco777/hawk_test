@@ -71,14 +71,10 @@ class HawkTestDriver:
     def __init__(self, addr='localhost', port='7630', browser='firefox', headless=False, version='12-SP2'):
         self.addr = addr
         self.port = port
-        self.timeout_scale = 1
-        self.set_browser(browser)
         self.driver = None
         self.test_version = version
         self.test_status = True
         self.headless = headless
-
-    def set_browser(self, browser):
         self.browser = browser
         if browser == 'firefox':
             self.timeout_scale = 2.5
