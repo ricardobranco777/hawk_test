@@ -73,6 +73,10 @@ def parse_args():
 def main():
     args = parse_args()
 
+    if args.prefix and not args.prefix.isalpha():
+        print("ERROR: Prefix must be alphanumeric", file=sys.stderr)
+        sys.exit(1)
+
     driver = "geckodriver" if args.browser == "firefox" else "chromedriver"
     if shutil.which(driver) is None:
         print("ERROR: Please download %s to a directory in PATH" % driver, file=sys.stderr)
@@ -96,9 +100,6 @@ def main():
     results.add_ssh_tests()
 
     # Resources to create
-    if args.prefix and not re.match(r"^\w+$", args.prefix):
-        print("ERROR: Prefix must contain only numbers and letters. Ignoring")
-        args.prefix = ''
     mycluster = args.prefix + 'Anderes'
     myprimitive = args.prefix + 'cool_primitive'
     myclone = args.prefix + 'cool_clone'
