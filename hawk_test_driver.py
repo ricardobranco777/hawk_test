@@ -205,10 +205,6 @@ class HawkTestDriver:
                 elem.click()
             time.sleep(2 * self.timeout_scale)
 
-    # Test skip function
-    def skip(self, testname, results):
-        self.set_test_status(results, testname, 'skipped')
-
     # Generic function to perform the tests
     def test(self, testname, results, *extra):
         self.test_status = True    # Clear internal test status before testing
