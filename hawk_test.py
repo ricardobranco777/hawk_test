@@ -5,6 +5,7 @@
 import argparse
 import ipaddress
 import re
+import shutil
 import socket
 import sys
 
@@ -71,6 +72,11 @@ def parse_args():
 
 def main():
     args = parse_args()
+
+    driver = "geckodriver" if args.browser == "firefox" else "chromedriver"
+    if shutil.which(driver) is None:
+        print("ERROR: Please download %s to a directory in PATH" % driver, file=sys.stderr)
+        sys.exit(1)
 
     if args.xvfb:
         global DISPLAY  # pylint: disable=global-statement
