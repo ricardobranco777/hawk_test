@@ -79,8 +79,6 @@ class HawkTestDriver:
         self.headless = headless
 
     def set_browser(self, browser):
-        if browser not in ['chrome', 'chromium', 'firefox']:
-            raise ValueError('Browser must be chrome, chromium or firefox')
         self.browser = browser
         if browser == 'firefox':
             self.timeout_scale = 2.5
