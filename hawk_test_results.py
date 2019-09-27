@@ -5,16 +5,16 @@
 import time
 import json
 
-import hawk_test_driver
-import hawk_test_ssh
+from hawk_test_driver import HawkTestDriver
+from hawk_test_ssh import HawkTestSSH
 
 
 class ResultSet:
     def __init__(self):
         self.my_tests = []
         self.start_time = time.time()
-        for func in dir(hawk_test_driver.HawkTestDriver):
-            if func.startswith('test_') and callable(getattr(hawk_test_driver.HawkTestDriver, func)):
+        for func in dir(HawkTestDriver):
+            if func.startswith('test_') and callable(getattr(HawkTestDriver, func)):
                 self.my_tests.append(func)
         self.results_set = {'tests': [], 'info': {}, 'summary': {}}
         for test in self.my_tests:
@@ -31,8 +31,8 @@ class ResultSet:
         self.results_set['summary']['num_tests'] = len(self.my_tests)
 
     def add_ssh_tests(self):
-        for func in dir(hawk_test_ssh.HawkTestSSH):
-            if func.startswith('verify_') and callable(getattr(hawk_test_ssh.HawkTestSSH, func)):
+        for func in dir(HawkTestSSH):
+            if func.startswith('verify_') and callable(getattr(HawkTestSSH, func)):
                 self.my_tests.append(func)
                 auxd = {'name': str(func), 'test_index': 0, 'outcome': 'failed'}
                 self.results_set['tests'].append(auxd)

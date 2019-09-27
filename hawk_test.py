@@ -10,9 +10,9 @@ import sys
 
 from pyvirtualdisplay import Display
 
-import hawk_test_driver
-import hawk_test_ssh
-import hawk_test_results
+from hawk_test_driver import HawkTestDriver
+from hawk_test_results import ResultSet
+from hawk_test_ssh import HawkTestSSH
 
 
 def hostname(string):
@@ -78,15 +78,15 @@ def main():
         DISPLAY.start()
 
     # Create driver instance
-    browser = hawk_test_driver.HawkTestDriver(addr=args.host, port=args.port,
-                                              browser=args.browser, headless=args.xvfb,
-                                              version=args.test_version.lower())
+    browser = HawkTestDriver(addr=args.host, port=args.port,
+                             browser=args.browser, headless=args.xvfb,
+                             version=args.test_version.lower())
 
     # Initialize results set
-    results = hawk_test_results.ResultSet()
+    results = ResultSet()
 
     # Establish SSH connection to verify status
-    ssh = hawk_test_ssh.HawkTestSSH(args.host, args.secret)
+    ssh = HawkTestSSH(args.host, args.secret)
     results.add_ssh_tests()
 
     # Resources to create
