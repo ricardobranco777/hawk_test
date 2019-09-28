@@ -21,7 +21,7 @@ def hostname(string):
         socket.getaddrinfo(string, 1)
         return string
     except socket.gaierror:
-        raise argparse.ArgumentTypeError("unknown host: %s" % string)
+        raise argparse.ArgumentTypeError("Unknown host: %s" % string)
 
 
 def cidr_address(string):
@@ -35,13 +35,13 @@ def cidr_address(string):
 def port(string):
     if string.isdigit() and 1 <= int(string) <= 65535:
         return string
-    raise argparse.ArgumentTypeError("%s is an invalid port number" % string)
+    raise argparse.ArgumentTypeError("Invalid port number: %s" % string)
 
 
 def sles_version(string):
     if re.match(r"\d{2}(?:-SP\d)?$", string):
         return string
-    raise argparse.ArgumentTypeError("%s is an invalid SLES version" % string)
+    raise argparse.ArgumentTypeError("Invalid SLES version: %s" % string)
 
 
 def parse_args():
