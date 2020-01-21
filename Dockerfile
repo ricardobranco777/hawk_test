@@ -2,6 +2,7 @@
 #!BuildTag: hawk_test
 # Use the repositories defined in OBS for installing packages
 #!UseOBSRepositories
+#!Prefer: openSUSE-release-appliance-docker
 FROM	opensuse/tumbleweed
 
 RUN	zypper -n install -y --no-recommends \
