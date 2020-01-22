@@ -357,14 +357,14 @@ class HawkTestDriver:
 
     def test_click_on_history(self):
         print("TEST: test_click_on_history")
-        self.click_if_major_version("15", 'troubleshoot')
+        self.click_if_major_version("15", 'troubleshooting')
         if not self.test_status:
             return False
         return self.click_on('History')
 
     def test_generate_report(self):
         print("TEST: test_generate_report: click on Generate report")
-        self.click_if_major_version("15", 'troubleshoot')
+        self.click_if_major_version("15", 'troubleshooting')
         self.click_on('History')
         self.check_and_click_by_xpath("Click on History", [Xpath.HREF_REPORTS])
         if self.find_element(By.XPATH, Xpath.GENERATE_REPORT):
@@ -382,7 +382,7 @@ class HawkTestDriver:
 
     def test_click_on_command_log(self):
         print("TEST: test_click_on_command_log")
-        self.click_if_major_version("15", 'troubleshoot')
+        self.click_if_major_version("15", 'troubleshooting')
         if not self.test_status:
             return False
         return self.click_on('Command Log')
