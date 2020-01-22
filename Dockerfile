@@ -14,9 +14,10 @@ RUN	zypper -n install -y --no-recommends \
 		python3-PyVirtualDisplay \
 		python3-selenium \
 		shadow \
+		xauth \
 		xdpyinfo \
 		xorg-x11-fonts \
-		xorg-x11-server && \
+		xorg-x11-server-Xvfb && \
 	zypper -n clean -a
 
 COPY	geckodriver /usr/local/bin/
