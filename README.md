@@ -34,19 +34,15 @@ Build image with:
 
 `docker build -t hawk_test -f Dockerfile.alpine`
 
-First you must create a world-writable directory (with the sticky bit set for security):
-
-`mkdir -m 1777 test/`
-
 Run:
 
-```docker run --ipc=host -xvfb -v $PWD/test:/test hawk_test [OPTIONS]```
+```docker run --ipc=host -xvfb hawk_test [OPTIONS]```
 
 If you don't want to use the Xvfb headless mode:
 
 ```
 xhost +
-docker run --ipc=host -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $PWD/test:/test hawk_test [OPTIONS]
+docker run --ipc=host -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix hawk_test [OPTIONS]
 ```
 
 Notes:
@@ -71,7 +67,7 @@ Notes:
   -s SECRET, --secret SECRET
                         root SSH Password of the HAWK node
   -r RESULTS, --results RESULTS
-                        Generate hawk_test.results file
+                        Generate hawk_test.results file for use with openQA.
   --xvfb                Use Xvfb. Headless mode
 ```
 
