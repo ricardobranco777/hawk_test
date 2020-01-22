@@ -47,7 +47,7 @@ class HawkTestSSH:
         return False
 
     def verify_node_maintenance(self, results):
-        if self.check_cluster_conf_ssh("crm status | grep -i ^node", "maintenance"):
+        if self.check_cluster_conf_ssh("crm status | grep -i node", "maintenance"):
             print("INFO: cluster node set successfully in maintenance mode")
             self.set_test_status(results, 'verify_node_maintenance', 'passed')
             return True
