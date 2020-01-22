@@ -106,12 +106,6 @@ class HawkTestDriver:
     def set_test_status(results, testname, status):
         results.set_test_status(testname, status)
 
-    # Some links by text are capitalized differently between the chrome and firefox drivers.
-    def link_by_browser(self, linktext):
-        if self.browser in ['chrome', 'chromium']:
-            return linktext.upper()
-        return linktext.capitalize()
-
     def _do_login(self):
         mainlink = 'https://%s:%s' % (self.addr, self.port)
         self.driver.get(mainlink)
@@ -132,9 +126,9 @@ class HawkTestDriver:
 
     # Clicks on element identified by clicker if major version from the test is greater or
     # equal than the version to check
-    def click_if_major_version(self, version_to_check, clicker):
+    def click_if_major_version(self, version_to_check, text):
         if Version(self.test_version) >= Version(version_to_check):
-            self.click_on(clicker)
+            self.find_element(By.XPATH, "//*[text()='%s']" % text.capitalize()).click()
 
     # Internal support function click_on partial link test. Sets test_status to False on failure
     def click_on(self, text):
@@ -184,7 +178,7 @@ class HawkTestDriver:
 
     def check_edit_conf(self):
         print("INFO: Check edit configuration")
-        self.click_if_major_version("15", self.link_by_browser('configuration'))
+        self.click_if_major_version("15", 'configuration')
         self.click_on('Edit Configuration')
         self.check_and_click_by_xpath("Couldn't find Edit Configuration element", [Xpath.CONFIG_EDIT])
 
@@ -210,6 +204,7 @@ class HawkTestDriver:
         self.test_status = True    # Clear internal test status before testing
         self._connect()
         if self._do_login():
+            time.sleep(5)
             if getattr(self, testname)(*extra):
                 self.set_test_status(results, testname, 'passed')
             else:
@@ -362,14 +357,14 @@ class HawkTestDriver:
 
     def test_click_on_history(self):
         print("TEST: test_click_on_history")
-        self.click_if_major_version("15", self.link_by_browser('troubleshooting'))
+        self.click_if_major_version("15", 'troubleshoot')
         if not self.test_status:
             return False
         return self.click_on('History')
 
     def test_generate_report(self):
         print("TEST: test_generate_report: click on Generate report")
-        self.click_if_major_version("15", self.link_by_browser('troubleshooting'))
+        self.click_if_major_version("15", 'troubleshoot')
         self.click_on('History')
         self.check_and_click_by_xpath("Click on History", [Xpath.HREF_REPORTS])
         if self.find_element(By.XPATH, Xpath.GENERATE_REPORT):
@@ -387,7 +382,7 @@ class HawkTestDriver:
 
     def test_click_on_command_log(self):
         print("TEST: test_click_on_command_log")
-        self.click_if_major_version("15", self.link_by_browser('troubleshooting'))
+        self.click_if_major_version("15", 'troubleshoot')
         if not self.test_status:
             return False
         return self.click_on('Command Log')
@@ -398,7 +393,7 @@ class HawkTestDriver:
 
     def test_add_primitive(self, priminame):
         print("TEST: test_add_primitive: Add Resources: Primitive %s" % priminame)
-        self.click_if_major_version("15", self.link_by_browser('configuration'))
+        self.click_if_major_version("15", 'configuration')
         self.click_on('Resource')
         self.check_and_click_by_xpath("Click on Add Resource", [Xpath.RESOURCES_TYPES])
         self.click_on('rimitive')
@@ -496,7 +491,7 @@ class HawkTestDriver:
 
     def test_add_clone(self, clone):
         print("TEST: test_add_clone: Adding clone [%s]" % clone)
-        self.click_if_major_version("15", self.link_by_browser('configuration'))
+        self.click_if_major_version("15", 'configuration')
         self.click_on('Resource')
         self.check_and_click_by_xpath("Click on Add Resource", [Xpath.RESOURCES_TYPES])
         self.check_and_click_by_xpath("on Create Clone [%s]" % clone, [Xpath.CLONE_DATA_HELP_FILTER])
@@ -516,7 +511,7 @@ class HawkTestDriver:
 
     def test_add_group(self, group):
         print("TEST: test_add_group: Adding group [%s]" % group)
-        self.click_if_major_version("15", self.link_by_browser('configuration'))
+        self.click_if_major_version("15", 'configuration')
         self.click_on('Resource')
         self.check_and_click_by_xpath("Click on Add Resource", [Xpath.RESOURCES_TYPES])
         self.check_and_click_by_xpath("while adding group [%s]" % group, [Xpath.GROUP_DATA_FILTER])
@@ -545,7 +540,7 @@ class HawkTestDriver:
 
     def test_add_virtual_ip(self, virtual_ip):
         print("TEST: test_add_virtual_ip: Add virtual IP from the Wizard")
-        self.click_if_major_version("15", self.link_by_browser('configuration'))
+        self.click_if_major_version("15", 'configuration')
         broadcast = str(ipaddress.IPv4Network(virtual_ip, False).broadcast_address)
         virtual_ip, netmask = virtual_ip.split('/')
         self.find_element(By.LINK_TEXT, 'Wizards').click()
@@ -576,7 +571,7 @@ class HawkTestDriver:
 
     def test_remove_virtual_ip(self):
         print("TEST: test_remove_virtual_ip: Remove virtual IP")
-        self.click_if_major_version("15", self.link_by_browser('configuration'))
+        self.click_if_major_version("15", 'configuration')
         self.remove_rsc("vip")
         return True
 
