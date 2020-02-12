@@ -10,7 +10,7 @@ class HawkTestSSH:
     def __init__(self, hostname, secret=None):
         self.ssh = paramiko.SSHClient()
         self.ssh.load_system_host_keys()
-        self.ssh.set_missing_host_key_policy(paramiko.WarningPolicy)
+        self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
         self.ssh.connect(hostname=hostname.lower(), username="root", password=secret)
 
     def check_cluster_conf_ssh(self, command, mustmatch):
