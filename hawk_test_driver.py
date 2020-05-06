@@ -533,9 +533,17 @@ class HawkTestDriver:
         print("TEST: test_click_around_edit_conf")
         print("TEST: Will click on Constraints, Nodes, Tags, Alerts and Fencing")
         self.check_edit_conf()
-        self.check_and_click_by_xpath("while checking around edit configuration",
-                                      [Xpath.HREF_CONSTRAINTS, Xpath.HREF_NODES, Xpath.HREF_TAGS,
-                                       Xpath.HREF_ALERTS, Xpath.HREF_FENCING])
+
+        click_list = [
+            Xpath.HREF_CONSTRAINTS, Xpath.HREF_NODES, Xpath.HREF_TAGS,
+            Xpath.HREF_ALERTS, Xpath.HREF_FENCING
+        ]
+
+        # HAWK version below 12-SP3 does not provide link to fencing
+        if Version(self.test_version) < Version("12-SP3"):
+            click_list.remove(Xpath.HREF_FENCING)
+
+        self.check_and_click_by_xpath("while checking around edit configuration", click_list)
         return self.test_status
 
     def test_add_virtual_ip(self, virtual_ip):
