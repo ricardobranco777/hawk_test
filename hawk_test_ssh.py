@@ -38,6 +38,7 @@ class HawkTestSSH:
         results.set_test_status(test, status)
 
     def verify_stonith_in_maintenance(self, results):
+        print("TEST: verify_stonith_in_maintenance")
         if self.check_cluster_conf_ssh("crm status | grep stonith-sbd", "unmanaged"):
             print("INFO: stonith-sbd is unmanaged")
             self.set_test_status(results, 'verify_stonith_in_maintenance', 'passed')
@@ -47,6 +48,7 @@ class HawkTestSSH:
         return False
 
     def verify_node_maintenance(self, results):
+        print("TEST: verify_node_maintenance: check cluster node is in maintenance mode")
         if self.check_cluster_conf_ssh("crm status | grep -i node", "maintenance"):
             print("INFO: cluster node set successfully in maintenance mode")
             self.set_test_status(results, 'verify_node_maintenance', 'passed')
@@ -56,6 +58,7 @@ class HawkTestSSH:
         return False
 
     def verify_primitive(self, myprimitive, version, results):
+        print("TEST: verify_primitive: check primitive [%s] exists" % myprimitive)
         matches = ["%s anything" % myprimitive, "binfile=file", "op start timeout=35s",
                    "op monitor timeout=9s interval=13s", "meta target-role=Started"]
         if Version(version) < Version('15'):
@@ -72,7 +75,8 @@ class HawkTestSSH:
         return False
 
     def verify_primitive_removed(self, myprimitive, results):
-        if self.check_cluster_conf_ssh("crm resource list | grep ocf::heartbeat:anything", ''):
+        print("TEST: verify_primitive_removed: check primitive [%s] is removed" % myprimitive)
+        if self.check_cluster_conf_ssh("crm resource status | grep ocf::heartbeat:anything", ''):
             print("INFO: primitive successfully removed")
             self.set_test_status(results, 'verify_primitive_removed', 'passed')
             return True
