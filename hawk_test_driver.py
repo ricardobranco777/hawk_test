@@ -354,7 +354,7 @@ class HawkTestDriver:
             print("INFO: Successfully removed cluster: [%s]" % cluster_name)
             return True
         # HAWK2 version in 12-SP2 doesn't provide AJAX feedback for removal of cluster
-        elif Version(self.test_version) < Version('12-SP3'):
+        if Version(self.test_version) < Version('12-SP3'):
             self.click_on('Dashboard')
             elem = self.find_element(By.PARTIAL_LINK_TEXT, cluster_name)
             if not elem:
