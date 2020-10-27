@@ -22,7 +22,7 @@ usage: hawk_test.py [-h] [-b {firefox,chrome,chromium}] [-H HOST] [-S SLAVE]
   - [Geckodriver](https://github.com/mozilla/geckodriver/releases)
   - Chromium (optional)
   - [Chromedriver](https://chromedriver.chromium.org/downloads) (optional)
-  - Python 3
+  - Python 3.6+
 - Python packages:
   - paramiko
   - selenium
