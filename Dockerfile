@@ -9,7 +9,6 @@ RUN	zypper -n install -y --no-recommends \
 		MozillaFirefox-branding-upstream \
 		chromium \
 		file \
-		python3 \
 		python3-paramiko \
 		python3-PyVirtualDisplay \
 		python3-selenium \
