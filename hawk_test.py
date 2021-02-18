@@ -7,6 +7,7 @@ import ipaddress
 import socket
 import sys
 
+
 from pyvirtualdisplay import Display
 
 from hawk_test_driver import HawkTestDriver
@@ -131,6 +132,9 @@ def main():
 
 
 if __name__ == "__main__":
+    import warnings
+    warnings.filterwarnings(action='ignore', module='.*paramiko.*')
+
     DISPLAY = None
     try:
         sys.exit(main())
