@@ -4,7 +4,6 @@
 
 import argparse
 import ipaddress
-import re
 import shutil
 import socket
 import sys
@@ -38,12 +37,6 @@ def port(string):
     raise argparse.ArgumentTypeError("Invalid port number: %s" % string)
 
 
-def sles_version(string):
-    if re.match(r"\d{2}(?:-SP\d)?$", string):
-        return string
-    raise argparse.ArgumentTypeError("Invalid SLES version: %s" % string)
-
-
 def parse_args():
     parser = argparse.ArgumentParser(description='HAWK GUI interface Selenium test')
     parser.add_argument('-b', '--browser', default='firefox', choices=['firefox', 'chrome', 'chromium'],
@@ -56,8 +49,6 @@ def parse_args():
                         help='Virtual IP address in CIDR notation')
     parser.add_argument('-P', '--port', default='7630', type=port,
                         help='TCP port where HAWK is running')
-    parser.add_argument('-t', '--test-version', required=True, type=sles_version,
-                        help='Test SLES Version. Ex: 12-SP3, 12-SP4, 15, 15-SP1')
     parser.add_argument('-s', '--secret',
                         help='root SSH Password of the HAWK node')
     parser.add_argument('-r', '--results',
@@ -81,17 +72,20 @@ def main():
         DISPLAY = Display()
         DISPLAY.start()
 
-    # Create driver instance
-    browser = HawkTestDriver(addr=args.host, port=args.port,
-                             browser=args.browser, headless=args.xvfb,
-                             version=args.test_version.upper())
-
     # Initialize results set
     results = ResultSet()
+    results.add_ssh_tests()
 
     # Establish SSH connection to verify status
     ssh = HawkTestSSH(args.host, args.secret)
-    results.add_ssh_tests()
+
+    # Get version from /etc/os-release
+    test_version = ssh.ssh.exec_command("grep VERSION_ID /etc/os-release")[1].read().decode().strip().split("=")[1][1:-1]
+
+    # Create driver instance
+    browser = HawkTestDriver(addr=args.host, port=args.port,
+                             browser=args.browser, headless=args.xvfb,
+                             version=test_version)
 
     # Resources to create
     mycluster = 'Anderes'
@@ -121,7 +115,7 @@ def main():
     browser.test('test_click_on_command_log', results)
     browser.test('test_click_on_status', results)
     browser.test('test_add_primitive', results, myprimitive)
-    ssh.verify_primitive(myprimitive, args.test_version, results)
+    ssh.verify_primitive(myprimitive, test_version, results)
     browser.test('test_remove_primitive', results, myprimitive)
     ssh.verify_primitive_removed(myprimitive, results)
     browser.test('test_add_clone', results, myclone)

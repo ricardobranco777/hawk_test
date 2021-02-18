@@ -60,8 +60,6 @@ Notes:
   -I VIRTUAL_IP, --virtual-ip VIRTUAL_IP
                         Virtual IP address in CIDR notation
   -P PORT, --port PORT  TCP port where HAWK is running
-  -t TEST_VERSION, --test-version TEST_VERSION
-                        Test SLES Version. Ex: 12-SP3, 12-SP4, 15, 15-SP1
   -s SECRET, --secret SECRET
                         root SSH Password of the HAWK node
   -r RESULTS, --results RESULTS
