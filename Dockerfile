@@ -2,7 +2,7 @@
 #!BuildTag: hawk_test
 # Use the repositories defined in OBS for installing packages
 #!UseOBSRepositories
-FROM	opensuse/tumbleweed
+FROM	opensuse/leap:15.2
 
 RUN	zypper -n install -y --no-recommends \
 		MozillaFirefox \
@@ -12,7 +12,6 @@ RUN	zypper -n install -y --no-recommends \
 		python3-paramiko \
 		python3-PyVirtualDisplay \
 		python3-selenium \
-		shadow \
 		xauth \
 		xdpyinfo \
 		xorg-x11-fonts \
