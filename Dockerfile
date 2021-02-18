@@ -16,7 +16,7 @@ RUN	zypper -n install -y --no-recommends \
 		xauth \
 		xdpyinfo \
 		xorg-x11-fonts \
-		xorg-x11-server-Xvfb && \
+		xorg-x11-Xvnc && \
 	zypper -n clean -a
 
 COPY	geckodriver /usr/local/bin/
