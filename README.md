@@ -8,9 +8,8 @@ This Docker image runs a set of Selenium tests for testing [Hawk](https://github
 
 ```
 usage: hawk_test.py [-h] [-b {firefox,chrome,chromium}] [-H HOST] [-S SLAVE]
-                    [-I VIRTUAL_IP] [-P PORT] [-p PREFIX] -t TEST_VERSION
+                    [-I VIRTUAL_IP] [-P PORT]
                     [-s SECRET] [-r RESULTS] [--xvfb]
-
 ```
 
 ## Dependencies
@@ -36,13 +35,13 @@ Build image with:
 
 Run:
 
-```docker run --ipc=host -xvfb hawk_test [OPTIONS]```
+```docker run --rm --ipc=host hawk_test --xvfb [OPTIONS]```
 
 If you don't want to use the Xvfb headless mode:
 
 ```
 xhost +
-docker run --ipc=host -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix hawk_test [OPTIONS]
+docker run --rm --ipc=host -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix hawk_test [OPTIONS]
 ```
 
 Notes:
