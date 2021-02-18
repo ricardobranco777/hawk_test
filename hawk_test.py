@@ -56,8 +56,6 @@ def parse_args():
                         help='Virtual IP address in CIDR notation')
     parser.add_argument('-P', '--port', default='7630', type=port,
                         help='TCP port where HAWK is running')
-    parser.add_argument('-p', '--prefix', default='',
-                        help='Prefix to add to Resources created during the test')
     parser.add_argument('-t', '--test-version', required=True, type=sles_version,
                         help='Test SLES Version. Ex: 12-SP3, 12-SP4, 15, 15-SP1')
     parser.add_argument('-s', '--secret',
@@ -72,10 +70,6 @@ def parse_args():
 
 def main():
     args = parse_args()
-
-    if args.prefix and not args.prefix.isalpha():
-        print("ERROR: Prefix must be alphanumeric", file=sys.stderr)
-        sys.exit(1)
 
     driver = "geckodriver" if args.browser == "firefox" else "chromedriver"
     if shutil.which(driver) is None:
@@ -100,10 +94,10 @@ def main():
     results.add_ssh_tests()
 
     # Resources to create
-    mycluster = args.prefix + 'Anderes'
-    myprimitive = args.prefix + 'cool_primitive'
-    myclone = args.prefix + 'cool_clone'
-    mygroup = args.prefix + 'cool_group'
+    mycluster = 'Anderes'
+    myprimitive = 'cool_primitive'
+    myclone = 'cool_clone'
+    mygroup = 'cool_group'
 
     # Tests to perform
     if args.virtual_ip:
