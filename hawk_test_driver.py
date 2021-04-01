@@ -566,9 +566,17 @@ class HawkTestDriver:
         self.fill_value('virtual-ip.ip', virtual_ip)
         self.fill_value('virtual-ip.cidr_netmask', netmask)
         self.fill_value('virtual-ip.broadcast', broadcast)
-        self.find_element(By.NAME, 'submit').click()
+        elem = self.find_element(By.NAME, 'submit')
+        if not elem:
+            print("ERROR: Couldn't find [Verify] button on Virtual IP Wizard")
+            return False
+        elem.click()
         time.sleep(3)
-        self.find_element(By.NAME, 'submit').click()
+        elem = self.find_element(By.NAME, 'submit')
+        if not elem:
+            print("ERROR: Couldn't find [Apply] button on Virtual IP Wizard")
+            return False
+        elem.click()
         time.sleep(3)
         # Check that we can connect to the Wizard on the virtual IP
         old_addr = self.addr
