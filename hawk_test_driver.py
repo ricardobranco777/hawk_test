@@ -596,8 +596,7 @@ class HawkTestDriver:
     def test_remove_virtual_ip(self):
         print("TEST: test_remove_virtual_ip: Remove virtual IP")
         self.click_if_major_version("15", 'configuration')
-        self.remove_rsc("vip")
-        return True
+        return self.remove_rsc("vip")
 
     def test_fencing(self):
         print("TEST: test_fencing")
