@@ -14,6 +14,8 @@ from selenium.common.exceptions import ElementNotInteractableException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from hawk_test_ssh import HawkTestSSH
+
 
 BIG_TIMEOUT = 6
 
@@ -71,11 +73,10 @@ class Xpath:
 
 
 class HawkTestDriver:
-    def __init__(self, addr='localhost', port='7630', browser='firefox', headless=False, version='12-SP2'):
-        self.addr = addr
+    def __init__(self, host='localhost', port='7630', browser='firefox', headless=False, **kwargs):
+        self.addr = host
         self.port = port
         self.driver = None
-        self.test_version = version
         self.test_status = True
         self.headless = headless
         self.browser = browser
@@ -83,6 +84,11 @@ class HawkTestDriver:
             self.timeout_scale = 2.5
         else:
             self.timeout_scale = 1
+        # Establish SSH connection
+        self.ssh = HawkTestSSH(self.addr, kwargs['secret'])
+        # Get version from /etc/os-release
+        cmd = "grep ^VERSION= /etc/os-release"
+        self.test_version = self.ssh.ssh.exec_command(cmd)[1].read().decode().strip().split("=")[1].strip('"')
 
     def _connect(self):
         if self.browser in ['chrome', 'chromium']:

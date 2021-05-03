@@ -12,7 +12,6 @@ from pyvirtualdisplay import Display
 
 from hawk_test_driver import HawkTestDriver
 from hawk_test_results import ResultSet
-from hawk_test_ssh import HawkTestSSH
 
 
 def hostname(string):
@@ -53,8 +52,8 @@ def parse_args():
                         help='root SSH Password of the HAWK node')
     parser.add_argument('-r', '--results',
                         help='Generate hawk_test.results file')
-    parser.add_argument('--xvfb', action='store_true',
-                        help='Use Xvfb. Headless mode')
+    parser.add_argument('--headless', action='store_true',
+                        help='Use headless mode')
     args = parser.parse_args()
     return args
 
@@ -62,7 +61,7 @@ def parse_args():
 def main():
     args = parse_args()
 
-    if args.xvfb:
+    if args.headless:
         global DISPLAY  # pylint: disable=global-statement
         DISPLAY = Display()
         DISPLAY.start()
@@ -71,16 +70,8 @@ def main():
     results = ResultSet()
     results.add_ssh_tests()
 
-    # Establish SSH connection to verify status
-    ssh = HawkTestSSH(args.host, args.secret)
-
-    # Get version from /etc/os-release
-    test_version = ssh.ssh.exec_command("grep ^VERSION= /etc/os-release")[1].read().decode().strip().split("=")[1].strip('"')
-
     # Create driver instance
-    browser = HawkTestDriver(addr=args.host, port=args.port,
-                             browser=args.browser, headless=args.xvfb,
-                             version=test_version)
+    browser = HawkTestDriver(**vars(args))
 
     # Resources to create
     mycluster = 'Anderes'
@@ -96,12 +87,12 @@ def main():
         results.set_test_status('test_add_virtual_ip', 'skipped')
         results.set_test_status('test_remove_virtual_ip', 'skipped')
     browser.test('test_set_stonith_maintenance', results)
-    ssh.verify_stonith_in_maintenance(results)
+    browser.ssh.verify_stonith_in_maintenance(results)
     browser.test('test_disable_stonith_maintenance', results)
     browser.test('test_view_details_first_node', results)
     browser.test('test_clear_state_first_node', results)
     browser.test('test_set_first_node_maintenance', results)
-    ssh.verify_node_maintenance(results)
+    browser.ssh.verify_node_maintenance(results)
     browser.test('test_disable_maintenance_first_node', results)
     browser.test('test_add_new_cluster', results, mycluster)
     browser.test('test_remove_cluster', results, mycluster)
@@ -110,9 +101,9 @@ def main():
     browser.test('test_click_on_command_log', results)
     browser.test('test_click_on_status', results)
     browser.test('test_add_primitive', results, myprimitive)
-    ssh.verify_primitive(myprimitive, test_version, results)
+    browser.ssh.verify_primitive(myprimitive, browser.test_version, results)
     browser.test('test_remove_primitive', results, myprimitive)
-    ssh.verify_primitive_removed(myprimitive, results)
+    browser.ssh.verify_primitive_removed(myprimitive, results)
     browser.test('test_add_clone', results, myclone)
     browser.test('test_remove_clone', results, myclone)
     browser.test('test_add_group', results, mygroup)
