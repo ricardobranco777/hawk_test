@@ -208,6 +208,17 @@ class HawkTestDriver:
                 elem.click()
             time.sleep(2 * self.timeout_scale)
 
+    # Check CPU
+    def test_cpu(self, results):
+        # Check ps
+        cmd = "ps axo pcpu,comm | awk '/hawk|puma/ { total += $1 } END { print total }'"
+        cpu_usage = int(self.ssh.ssh.exec_command(cmd)[1].read().decode().strip())
+        print("INFO: CPU usage is %s" % cpu_usage)
+        if cpu_usage > 50:
+            self.set_test_status(results, "test_cpu", 'passed')
+        else:
+            self.set_test_status(results, "test_cpu", 'failed')
+
     # Generic function to perform the tests
     def test(self, testname, results, *extra):
         self.test_status = True    # Clear internal test status before testing

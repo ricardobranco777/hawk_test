@@ -6,6 +6,7 @@ import argparse
 import ipaddress
 import socket
 import sys
+import time
 
 
 from pyvirtualdisplay import Display
@@ -109,6 +110,8 @@ def main():
     browser.test('test_add_group', results, mygroup)
     browser.test('test_remove_group', results, mygroup)
     browser.test('test_click_around_edit_conf', results)
+    time.sleep(60)
+    browser.test_cpu(results)
     if args.slave:
         browser.addr = args.slave
         browser.test('test_fencing', results)
