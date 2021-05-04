@@ -63,7 +63,7 @@ Notes:
                         root SSH Password of the HAWK node
   -r RESULTS, --results RESULTS
                         Generate hawk_test.results file for use with openQA.
-  --xvfb                Use Xvfb. Headless mode
+  --headless		Use headless mode
 ```
 
 ## FAQ
