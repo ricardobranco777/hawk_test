@@ -2,7 +2,7 @@
 
 This Docker image runs a set of Selenium tests for testing [Hawk](https://github.com/ClusterLabs/hawk/)
 
-[![Build Status](https://travis-ci.org/ricardobranco777/hawk_test.svg?branch=master)](https://travis-ci.org/ricardobranco777/hawk_test)
+[![Build Status](https://travis-ci.com/ricardobranco777/hawk_test.svg?branch=master)](https://travis-ci.org/ricardobranco777/hawk_test)
 
 ## Usage
 
