@@ -198,9 +198,9 @@ class HawkTestDriver:
                 elem.click()
             except ElementNotInteractableException:
                 # Element is obscured. Wait and click again
-                time.sleep(2 * self.timeout_scale)
+                time.sleep(5 * self.timeout_scale)
                 elem.click()
-            time.sleep(2 * self.timeout_scale)
+            time.sleep(5 * self.timeout_scale)
 
     # Generic function to perform the tests
     def test(self, testname, results, *extra):
