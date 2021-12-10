@@ -194,13 +194,13 @@ class HawkTestDriver:
                 print("ERROR: Couldn't find element by xpath [%s] %s" % (xpath, errmsg))
                 self.test_status = False
                 return
+            time.sleep(3)
             try:
                 elem.click()
             except ElementNotInteractableException:
                 # Element is obscured. Wait and click again
                 time.sleep(5 * self.timeout_scale)
                 elem.click()
-            time.sleep(5 * self.timeout_scale)
 
     # Generic function to perform the tests
     def test(self, testname, results, *extra):
