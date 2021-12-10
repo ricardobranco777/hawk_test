@@ -456,6 +456,7 @@ class HawkTestDriver:
             print("ERROR: Couldn't find element [primitive[meta][target-role]]. "
                   "Cannot add primitive [%s]." % priminame)
             return False
+        time.sleep(1)
         elem.click()
         self.check_and_click_by_xpath(Error.PRIMITIVE_TARGET_ROLE_ERR, [Xpath.TARGET_ROLE_STARTED])
         elem = self.find_element(By.NAME, 'submit')
@@ -473,8 +474,10 @@ class HawkTestDriver:
     def remove_rsc(self, name):
         print("INFO: Remove Resource: %s" % name)
         self.check_edit_conf()
+        time.sleep(3)
         self.check_and_click_by_xpath("Cannot edit or remove resource [%s]" % name,
                                       [Xpath.HREF_DELETE_FORMAT % name, Xpath.COMMIT_BTN_DANGER, Xpath.CONFIG_EDIT])
+        time.sleep(3)
         if not self.test_status:
             print("ERROR: One of the elements required to remove resource [%s] wasn't found" % name)
             return False
