@@ -194,7 +194,7 @@ class HawkTestDriver:
                 print("ERROR: Couldn't find element by xpath [%s] %s" % (xpath, errmsg))
                 self.test_status = False
                 return
-            time.sleep(3)
+            time.sleep(1)
             try:
                 elem.click()
             except ElementNotInteractableException:
