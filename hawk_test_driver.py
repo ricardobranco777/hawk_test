@@ -34,7 +34,6 @@ class Xpath:
     CLONE_CHILD = '//select[contains(@data-help-filter, ".row.resource") and contains(@name, "clone[child]")]'
     CLONE_DATA_HELP_FILTER = '//a[contains(@data-help-filter, ".clone")]'
     COMMIT_BTN_DANGER = '//button[contains(@class, "btn-danger") and contains(@class, "commit")]'
-    CONFIG_EDIT = '//a[contains(@href, "config/edit")]'
     DISMISS_MODAL = '//*[@id="modal"]/div/div/div[3]/button'
     DROP_DOWN_FORMAT = '//*[@id="resources"]/div[1]/div[2]/div[2]/table/tbody/tr[%d]/td[6]/div/div'
     EDIT_MONITOR_TIMEOUT = '//*[@id="oplist"]/fieldset/div/div[1]/div[3]/div[2]/div/div/a[1]'
@@ -43,6 +42,8 @@ class Xpath:
     GENERATE_REPORT = '//*[@id="generate"]/form/div/div[2]/button'
     GROUP_DATA_FILTER = '//a[contains(@data-help-filter, ".group")]'
     HREF_ALERTS = '//a[contains(@href, "#alerts")]'
+    HREF_CONFIGURATION = '//a[contains(@href, "#configurationMenu")]'
+    HREF_CONFIG_EDIT = '//a[contains(@href, "config/edit")]'
     HREF_CONSTRAINTS = '//a[contains(@href, "#constraints")]'
     HREF_DASHBOARD = '//a[contains(@href, "/dashboard")]'
     HREF_DELETE_FORMAT = '//a[contains(@href, "%s") and contains(@title, "Delete")]'
@@ -181,9 +182,10 @@ class HawkTestDriver:
 
     def check_edit_conf(self):
         print("INFO: Check edit configuration")
-        self.click_if_major_version("15", 'configuration')
-        self.click_on('Edit Configuration')
-        self.check_and_click_by_xpath("Couldn't find Edit Configuration element", [Xpath.CONFIG_EDIT])
+        time.sleep(1)
+        self.check_and_click_by_xpath("Couldn't find Configuration element", [Xpath.HREF_CONFIGURATION])
+        time.sleep(1)
+        self.check_and_click_by_xpath("Couldn't find Edit Configuration element", [Xpath.HREF_CONFIG_EDIT])
 
     # Internal support function to find element(s) by xpath and click them
     # Sets test_status to False on failure.
@@ -474,10 +476,14 @@ class HawkTestDriver:
     def remove_rsc(self, name):
         print("INFO: Remove Resource: %s" % name)
         self.check_edit_conf()
-        time.sleep(3)
-        self.check_and_click_by_xpath("Cannot edit or remove resource [%s]" % name,
-                                      [Xpath.HREF_DELETE_FORMAT % name, Xpath.COMMIT_BTN_DANGER, Xpath.CONFIG_EDIT])
-        time.sleep(3)
+        # resurces list does load again after edit configuration page is loaded
+        time.sleep(5)
+        self.check_and_click_by_xpath("Cannot delete resource [%s]" % name, [Xpath.HREF_DELETE_FORMAT % name])
+        time.sleep(2)
+        self.check_and_click_by_xpath("Cannot confirm delete of resource [%s]" % name, [Xpath.COMMIT_BTN_DANGER])
+        time.sleep(2)
+        self.check_and_click_by_xpath("Couldn't find Edit Configuration element", [Xpath.HREF_CONFIG_EDIT])
+        time.sleep(2)
         if not self.test_status:
             print("ERROR: One of the elements required to remove resource [%s] wasn't found" % name)
             return False
@@ -601,7 +607,6 @@ class HawkTestDriver:
 
     def test_remove_virtual_ip(self):
         print("TEST: test_remove_virtual_ip: Remove virtual IP")
-        self.click_if_major_version("15", 'configuration')
         return self.remove_rsc("vip")
 
     def test_fencing(self):
