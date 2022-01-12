@@ -2,7 +2,7 @@
 #!BuildTag: hawk_test
 # Use the repositories defined in OBS for installing packages
 #!UseOBSRepositories
-FROM	opensuse/leap:15.2
+FROM	opensuse/leap:15.3
 
 RUN	zypper -n install -y --no-recommends \
 		MozillaFirefox \
