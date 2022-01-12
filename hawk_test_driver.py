@@ -183,7 +183,8 @@ class HawkTestDriver:
     def check_edit_conf(self):
         print("INFO: Check edit configuration")
         time.sleep(1)
-        self.check_and_click_by_xpath("Couldn't find Configuration element", [Xpath.HREF_CONFIGURATION])
+        if Version(self.test_version) >= Version("15"):
+            self.check_and_click_by_xpath("Couldn't find Configuration element", [Xpath.HREF_CONFIGURATION])
         time.sleep(1)
         self.check_and_click_by_xpath("Couldn't find Edit Configuration element", [Xpath.HREF_CONFIG_EDIT])
 
@@ -476,14 +477,14 @@ class HawkTestDriver:
     def remove_rsc(self, name):
         print("INFO: Remove Resource: %s" % name)
         self.check_edit_conf()
-        # resurces list does load again after edit configuration page is loaded
+        # resources list does load again after edit configuration page is loaded
         time.sleep(5)
         self.check_and_click_by_xpath("Cannot delete resource [%s]" % name, [Xpath.HREF_DELETE_FORMAT % name])
         time.sleep(2)
         self.check_and_click_by_xpath("Cannot confirm delete of resource [%s]" % name, [Xpath.COMMIT_BTN_DANGER])
         time.sleep(2)
         self.check_and_click_by_xpath("Couldn't find Edit Configuration element", [Xpath.HREF_CONFIG_EDIT])
-        time.sleep(2)
+        time.sleep(3)
         if not self.test_status:
             print("ERROR: One of the elements required to remove resource [%s] wasn't found" % name)
             return False
