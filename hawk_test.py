@@ -20,21 +20,21 @@ def hostname(string):
         socket.getaddrinfo(string, 1)
         return string
     except socket.gaierror:
-        raise argparse.ArgumentTypeError("Unknown host: %s" % string)
+        raise argparse.ArgumentTypeError(f"Unknown host: {string}")  # pylint: disable=raise-missing-from
 
 
 def cidr_address(string):
     try:
         ipaddress.ip_network(string, False)
         return string
-    except ValueError:
-        raise argparse.ArgumentTypeError("Invalid CIDR address: %s" % string)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(f"Invalid CIDR address: {string}") from exc
 
 
 def port(string):
     if string.isdigit() and 1 <= int(string) <= 65535:
         return string
-    raise argparse.ArgumentTypeError("Invalid port number: %s" % string)
+    raise argparse.ArgumentTypeError(f"Invalid port number: {string}") from ValueError
 
 
 def parse_args():
