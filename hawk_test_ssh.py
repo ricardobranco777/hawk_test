@@ -57,28 +57,28 @@ class HawkTestSSH:
         self.set_test_status(results, 'verify_node_maintenance', 'failed')
         return False
 
-    def verify_primitive(self, myprimitive, version, results):
-        print(f"TEST: verify_primitive: check primitive [{myprimitive}] exists")
-        matches = [f"{myprimitive} anything", "binfile=file", "op start timeout=35s",
+    def verify_primitive(self, primitive, version, results):
+        print(f"TEST: verify_primitive: check primitive [{primitive}] exists")
+        matches = [f"{primitive} anything", "binfile=file", "op start timeout=35s",
                    "op monitor timeout=9s interval=13s", "meta target-role=Started"]
         if Version(version) < Version('15'):
             matches.append("op stop timeout=15s")
         else:
             matches.append("op stop timeout=15s on-fail=stop")
         if self.check_cluster_conf_ssh("crm configure show", matches):
-            print(f"INFO: primitive [{myprimitive}] correctly defined in the cluster configuration")
+            print(f"INFO: primitive [{primitive}] correctly defined in the cluster configuration")
             self.set_test_status(results, 'verify_primitive', 'passed')
             return True
-        print(f"ERROR: primitive [{myprimitive}] missing from cluster configuration")
+        print(f"ERROR: primitive [{primitive}] missing from cluster configuration")
         self.set_test_status(results, 'verify_primitive', 'failed')
         return False
 
-    def verify_primitive_removed(self, myprimitive, results):
-        print(f"TEST: verify_primitive_removed: check primitive [{myprimitive}] is removed")
+    def verify_primitive_removed(self, primitive, results):
+        print(f"TEST: verify_primitive_removed: check primitive [{primitive}] is removed")
         if self.check_cluster_conf_ssh("crm resource status | grep ocf::heartbeat:anything", ''):
             print("INFO: primitive successfully removed")
             self.set_test_status(results, 'verify_primitive_removed', 'passed')
             return True
-        print(f"ERROR: primitive [{myprimitive}] still present in the cluster while checking with SSH")
+        print(f"ERROR: primitive [{primitive}] still present in the cluster while checking with SSH")
         self.set_test_status(results, 'verify_primitive_removed', 'failed')
         return False

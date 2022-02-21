@@ -290,7 +290,7 @@ class HawkTestDriver:
         print("ERROR: failed to switch node to ready mode")
         return False
 
-    def test_add_new_cluster(self, cluster_name):
+    def test_add_new_cluster(self, cluster):
         print("TEST: test_add_new_cluster")
         self.click_on('Dashboard')
         self.check_and_click_by_xpath("Click on Dashboard", [Xpath.HREF_DASHBOARD])
@@ -303,7 +303,7 @@ class HawkTestDriver:
         if not elem:
             print("ERROR: Couldn't find element [cluster[name]]. Cannot add cluster")
             return False
-        elem.send_keys(cluster_name)
+        elem.send_keys(cluster)
         elem = self.find_element(By.NAME, "cluster[host]")
         if not elem:
             print("ERROR: Couldn't find element [cluster[host]]. Cannot add cluster")
@@ -323,14 +323,14 @@ class HawkTestDriver:
                 time.sleep(1 + self.timeout_scale)
         return False
 
-    def test_remove_cluster(self, cluster_name):
+    def test_remove_cluster(self, cluster):
         print("TEST: test_remove_cluster")
         self.click_on('Dashboard')
         self.check_and_click_by_xpath("Click on Dashboard", [Xpath.HREF_DASHBOARD])
         if Version(self.test_version) >= Version('12-SP3'):
-            elem = self.find_element(By.PARTIAL_LINK_TEXT, cluster_name)
+            elem = self.find_element(By.PARTIAL_LINK_TEXT, cluster)
             if not elem:
-                print(f"ERROR: Couldn't find cluster [{cluster_name}]. Cannot remove")
+                print(f"ERROR: Couldn't find cluster [{cluster}]. Cannot remove")
                 return False
             elem.click()
         time.sleep(BIG_TIMEOUT)
@@ -342,7 +342,7 @@ class HawkTestDriver:
         time.sleep(2 * self.timeout_scale)
         elem = self.find_element(By.CLASS_NAME, 'cancel')
         if not elem:
-            print(f"ERROR: No cancel button while removing cluster [{cluster_name}]")
+            print(f"ERROR: No cancel button while removing cluster [{cluster}]")
         else:
             elem.click()
         time.sleep(self.timeout_scale)
@@ -351,20 +351,20 @@ class HawkTestDriver:
         time.sleep(2 * self.timeout_scale)
         elem = self.find_element(By.CLASS_NAME, 'btn-danger')
         if not elem:
-            print(f"ERROR: No OK button found while removing cluster [{cluster_name}]")
+            print(f"ERROR: No OK button found while removing cluster [{cluster}]")
         else:
             elem.click()
         if self.verify_success():
-            print(f"INFO: Successfully removed cluster: [{cluster_name}]")
+            print(f"INFO: Successfully removed cluster: [{cluster}]")
             return True
         # HAWK2 version in 12-SP2 doesn't provide AJAX feedback for removal of cluster
         if Version(self.test_version) < Version('12-SP3'):
             self.click_on('Dashboard')
-            elem = self.find_element(By.PARTIAL_LINK_TEXT, cluster_name)
+            elem = self.find_element(By.PARTIAL_LINK_TEXT, cluster)
             if not elem:
-                print(f"INFO: Successfully removed cluster: [{cluster_name}]")
+                print(f"INFO: Successfully removed cluster: [{cluster}]")
                 return True
-        print(f"ERROR: Could not remove cluster [{cluster_name}]")
+        print(f"ERROR: Could not remove cluster [{cluster}]")
         return False
 
     def test_click_on_history(self):
@@ -400,8 +400,8 @@ class HawkTestDriver:
         print("TEST: test_click_on_status")
         return self.click_on('Status')
 
-    def test_add_primitive(self, priminame):
-        print(f"TEST: test_add_primitive: Add Resources: Primitive {priminame}")
+    def test_add_primitive(self, primitive):
+        print(f"TEST: test_add_primitive: Add Resources: Primitive {primitive}")
         self.click_if_major_version("15", 'configuration')
         self.click_on('Resource')
         self.check_and_click_by_xpath("Click on Add Resource", [Xpath.RESOURCES_TYPES])
@@ -409,19 +409,19 @@ class HawkTestDriver:
         # Fill the primitive
         elem = self.find_element(By.NAME, 'primitive[id]')
         if not elem:
-            print(f"ERROR: Couldn't find element [primitive[id]]. Cannot add primitive [{priminame}].")
+            print(f"ERROR: Couldn't find element [primitive[id]]. Cannot add primitive [{primitive}].")
             return False
-        elem.send_keys(priminame)
+        elem.send_keys(primitive)
         elem = self.find_element(By.NAME, 'primitive[clazz]')
         if not elem:
-            print(f"ERROR: Couldn't find element [primitive[clazz]]. Cannot add primitive [{priminame}]")
+            print(f"ERROR: Couldn't find element [primitive[clazz]]. Cannot add primitive [{primitive}]")
             return False
         elem.click()
         self.check_and_click_by_xpath("Couldn't find value [ocf] for primitive class",
                                       [Xpath.OCF_OPT_LIST])
         elem = self.find_element(By.NAME, 'primitive[type]')
         if not elem:
-            print(f"ERROR: Couldn't find element [primitive[type]]. Cannot add primitive [{priminame}].")
+            print(f"ERROR: Couldn't find element [primitive[type]]. Cannot add primitive [{primitive}].")
             return False
         elem.click()
         self.check_and_click_by_xpath("Couldn't find value [anything] for primitive type",
@@ -452,21 +452,21 @@ class HawkTestDriver:
         elem = self.find_element(By.NAME, 'primitive[meta][target-role]')
         if not elem:
             print("ERROR: Couldn't find element [primitive[meta][target-role]]. "
-                  f"Cannot add primitive [{priminame}].")
+                  f"Cannot add primitive [{primitive}].")
             return False
         time.sleep(1)
         elem.click()
         self.check_and_click_by_xpath(Error.PRIMITIVE_TARGET_ROLE_ERR, [Xpath.TARGET_ROLE_STARTED])
         elem = self.find_element(By.NAME, 'submit')
         if not elem:
-            print(f"ERROR: Couldn't find submit button for primitive [{priminame}] creation.")
+            print(f"ERROR: Couldn't find submit button for primitive [{primitive}] creation.")
         else:
             elem.click()
         status = self.verify_success()
         if status:
-            print(f"INFO: Successfully added primitive [{priminame}] of class [ocf:heartbeat:anything]")
+            print(f"INFO: Successfully added primitive [{primitive}] of class [ocf:heartbeat:anything]")
         else:
-            print(f"ERROR: Could not create primitive [{priminame}]")
+            print(f"ERROR: Could not create primitive [{primitive}]")
         return status
 
     def remove_rsc(self, name):
@@ -490,9 +490,9 @@ class HawkTestDriver:
         print(f"ERROR: Failed to remove resource [{name}]")
         return False
 
-    def test_remove_primitive(self, name):
-        print(f"TEST: test_remove_primitive: Remove Primitive: {name}")
-        return self.remove_rsc(name)
+    def test_remove_primitive(self, primitive):
+        print(f"TEST: test_remove_primitive: Remove Primitive: {primitive}")
+        return self.remove_rsc(primitive)
 
     def test_remove_clone(self, clone):
         print(f"TEST: test_remove_clone: Remove Clone: {clone}")
